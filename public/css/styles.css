@@ -1,0 +1,43 @@
+button.submit {
+  float: right;
+}
+
+form#med-manager {
+  margin-top: 50px;
+}
+
+.panel-heading button.delete,
+button.edit {
+  float: right;
+  margin: 5px;
+}
+
+.user-container {
+  margin-top: 50px;
+}
+
+.user-list {
+  margin-top: 25px;
+}
+
+.meds-container {
+  margin-top: 30px;
+}
+
+.meds {
+  margin-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+.user-input {
+  width: 100%;
+  height: 35px;
+  margin-top: 5px;
+}
+
+.top-30 {
+  margin-top: 30px;
+}
