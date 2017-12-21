@@ -194,7 +194,7 @@ $(document).ready(function() {
     console.log("medDoseNum: " + medDoseNum);
     var medDoseUnit = (medDose.replace(/[0-9]/g,'')).toUpperCase().trim();
     console.log("medDoseUnit: " + medDoseUnit);
-    var medDoseNew = medDoseNum.trim() + " " + medDoseUnit.trim();
+    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit.trim();
     console.log("medDoseNew: " + medDoseNew);
     var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
     //Use ajax call to obtain images asychronously
