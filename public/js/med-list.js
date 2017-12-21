@@ -7,6 +7,7 @@ $(document).ready(function() {
   // Click events for the edit and delete buttons
   $(document).on("click", "button.delete", handleMedsDelete);
   $(document).on("click", "button.edit", handleMedsEdit);
+  $(document).on("click", "button.pic", obtainMedPics);
   // Variable to hold our meds
   var meds;
 
@@ -75,6 +76,9 @@ $(document).ready(function() {
     var editBtn = $("<button>");
     editBtn.text("EDIT");
     editBtn.addClass("edit btn btn-info");
+    var picBtn = $("<button>");
+    picBtn.text("View Picture(s)");
+    picBtn.addClass("pic btn btn-success");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
@@ -92,6 +96,7 @@ $(document).ready(function() {
     newMedsBody.text(meds.instructions + " - " + meds.freq_times + " times  -  " + meds.freq_main);
     newMedsPanelHeading.append(deleteBtn);
     newMedsPanelHeading.append(editBtn);
+    newMedsPanelHeading.append(picBtn);
     newMedsPanelHeading.append(newMedsTitle);
     newMedsPanelHeading.append(newMedsUser);
     newMedsPanelBody.append(newMedsBody);
@@ -171,5 +176,59 @@ $(document).ready(function() {
     }
 
   });
+
+  function obtainMedPics() {
+    event.preventDefault();
+    $(".slideshow-container").empty();
+    var chosenMed = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+
+    console.log("chosenMed: " + chosenMed);
+    var medName = chosenMed.med_name;
+    console.log("medName: " + medName);
+    var medDose = chosenMed.med_dose;
+    console.log("medDose: " + medDose);
+    var medDoseNum = medDose.match(/\d+/)[0];
+    console.log("medDoseNum: " + medDoseNum);
+    var medDoseUnit = (medDose.replace(/[0-9]/g,'')).toUpperCase();
+    console.log("medDoseUnit: " + medDoseUnit);
+    var medDoseNew = medDoseNum + " " + medDoseUnit;
+    console.log("medDoseNew: " + medDoseNew);
+    var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
+    //Use ajax call to obtain images asychronously
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).done(function(response){
+        console.log("response.nlmRxImages: " + response.nlmRxImages);
+        var likelyArray = [];
+        for(var i = 0; i<response.nlmRxImages.length; i++){
+          if( (response.nlmRxImages[i].name).indexOf(medDoseNew) !== -1){
+            likelyArray.push(response.nlmRxImages[i].imageUrl);
+          }
+        }
+        if(likelyArray.length === 0){
+          alert("No Image available");
+          return;
+        }
+        console.log("likelyArray: " + likelyArray);
+        var carouselContainer = $(".slideshow-container");
+        //var item = $(".carousel-inner");
+        $("#picModal").modal("toggle");
+          $.each(likelyArray, function( intIndex, objValue ){
+            console.log("intIndex: " + intIndex);
+            console.log("objValue: " + objValue);
+            //list.append($( '<li data-target="#myCarousel" data-slide-to="' +intIndex+ '"</li>' ));
+            carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div><br>'));      
+          });
+          $('.carousel-indicators li:first').addClass('active');
+          $('.carousel-inner li:first').addClass('active');
+      });
+  }
+
+
+
 
 });
