@@ -1,4 +1,4 @@
-$(document).ready(function() {
+//$(document).ready(function() {
   /* global moment */
 
   // medsContainer holds all of our meds
@@ -180,6 +180,7 @@ $(document).ready(function() {
   function obtainMedPics() {
     event.preventDefault();
     $(".slideshow-container").empty();
+    $(".inner-container").empty();
     var chosenMed = $(this)
       .parent()
       .parent()
@@ -215,20 +216,60 @@ $(document).ready(function() {
         }
         console.log("likelyArray: " + likelyArray);
         var carouselContainer = $(".slideshow-container");
-        //var item = $(".carousel-inner");
+        var item = $(".inner-container");
         $("#picModal").modal("toggle");
-          $.each(likelyArray, function( intIndex, objValue ){
-            console.log("intIndex: " + intIndex);
-            console.log("objValue: " + objValue);
-            //list.append($( '<li data-target="#myCarousel" data-slide-to="' +intIndex+ '"</li>' ));
-            carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div><br>'));      
-          });
+
+	      $.each(likelyArray, function( intIndex, objValue ){
+	        console.log("intIndex: " + intIndex);
+	        console.log("objValue: " + objValue);
+	        item.append($( '<span class = "dot" onclick="currentSlide(' + intIndex + ')"></span>' ));
+	        carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div>'));      
+	      });
           $('.carousel-indicators li:first').addClass('active');
           $('.carousel-inner li:first').addClass('active');
-      });
+
+          	var slideIndex = 1;
+			showSlides(slideIndex);
+			currentSlide(slideIndex);
+
+    });
   }
 
+	var slideIndex = 1;
+	showSlides(slideIndex);
 
+	// Next/previous controls
+	function plusSlides(n) {
+	  showSlides(slideIndex += n);
+	};
 
+	// Thumbnail image controls
+	function currentSlide(n) {
+	  showSlides(slideIndex = n);
+	};
 
-});
+	function showSlides(n) {
+	  console.log("slideIndex: " + n);
+	  var i;
+	  var slides = $(".mySlides");
+	  console.log("slides.length: " + slides.length);
+	  var dots = $(".dot");
+	  if (n > slides.length) {slideIndex = 1}
+	  if (n < 1) {slideIndex = slides.length}
+	  for (i = 0; i < slides.length; i++) {
+	      slides[i].style.display = "none"; 
+	  }
+	  for (i = 0; i < dots.length; i++) {
+	      dots[i].className = dots[i].className.replace(" active", "");
+	  }
+	  if(n == 1){
+	  	slides[0].style.display = "block";
+	  	dots[0].className += " active";
+	  };
+	  if(n != 1){
+	  	slides[slideIndex-1].style.display = "block"; 
+	  	dots[slideIndex-1].className += " active";
+	  }
+	};
+
+//});
