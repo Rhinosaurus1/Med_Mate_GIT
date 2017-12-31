@@ -146,6 +146,15 @@
 
   
   function obtainMedChart(){
+    event.preventDefault();
+    var chosenMed = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+    var medName = chosenMed.med_name.trim();
+    var doseRemain = chosenMed.remaining_count
+    var doseInitial = chosenMed.initial_count
+    console.log("medName: " + medName);
     $("#chartModal").modal("toggle");
       var ctx = document.getElementById("myChart").getContext('2d');
       var myDoughnutChart = new Chart(ctx, {
@@ -154,7 +163,7 @@
           labels: ["Doses Taken", "Doses Remaining"],
             datasets: [{
                 label: 'meds taken',
-                data: [12, 19],
+                data: [doseInitial-doseRemain, doseRemain],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -179,7 +188,7 @@
             title: {
               display: true,
               fontSize: 40,
-              text: 'Dose Tracker'
+              text: 'Dose Tracker for ' + medName
             }
         }
 
