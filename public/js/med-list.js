@@ -8,6 +8,7 @@
   $(document).on("click", "button.delete", handleMedsDelete);
   $(document).on("click", "button.edit", handleMedsEdit);
   $(document).on("click", "button.pic", obtainMedPics);
+  $(document).on("click", "button.chart", obtainMedChart);
   // Variable to hold our meds
   var meds;
 
@@ -79,6 +80,9 @@
     var picBtn = $("<button>");
     picBtn.text("View Picture(s)");
     picBtn.addClass("pic btn btn-success");
+    var chartBtn = $("<button>");
+    chartBtn.text("View Chart");
+    chartBtn.addClass("chart btn btn-success");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
@@ -97,6 +101,7 @@
     newMedsPanelHeading.append(deleteBtn);
     newMedsPanelHeading.append(editBtn);
     newMedsPanelHeading.append(picBtn);
+    newMedsPanelHeading.append(chartBtn);
     newMedsPanelHeading.append(newMedsTitle);
     newMedsPanelHeading.append(newMedsUser);
     newMedsPanelBody.append(newMedsBody);
@@ -139,43 +144,56 @@
     medsContainer.append(messageh2);
   }
 
-  var ctx = document.getElementById("myChart").getContext('2d');
-  var myDoughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ["Meds Taken", "Meds Not Taken"],
-        datasets: [{
-            label: 'meds taken',
-            data: [12, 19],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        cutoutPercentage: 50,
-        title: {
-          display: true,
-          fontSize: 20,
-          text: 'Number of Meds Taken Today'
+  
+  function obtainMedChart(){
+    event.preventDefault();
+    var chosenMed = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+    var medName = chosenMed.med_name.trim();
+    var doseRemain = chosenMed.remaining_count
+    var doseInitial = chosenMed.initial_count
+    console.log("medName: " + medName);
+    $("#chartModal").modal("toggle");
+      var ctx = document.getElementById("myChart").getContext('2d');
+      var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ["Doses Taken", "Doses Remaining"],
+            datasets: [{
+                label: 'meds taken',
+                data: [doseInitial-doseRemain, doseRemain],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            cutoutPercentage: 50,
+            title: {
+              display: true,
+              fontSize: 40,
+              text: 'Dose Tracker for ' + medName
+            }
         }
-    }
 
-  });
+      });
+  }
 
   function obtainMedPics() {
     event.preventDefault();

@@ -7,7 +7,7 @@ form#med-manager {
 }
 
 .panel-heading button.delete,
-button.edit, button.pic {
+button.edit, button.pic, button.chart {
   float: right;
   margin: 5px;
 }
@@ -42,8 +42,8 @@ button.edit, button.pic {
   margin-top: 30px;
 }
 
-.chart {
-  margin-top: 30px;
+*#myChart {
+  margin-top: 15px;
 }
 
 * {box-sizing:border-box}
