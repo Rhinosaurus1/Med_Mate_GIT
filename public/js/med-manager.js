@@ -31,7 +31,7 @@ $(document).ready(function() {
     userId = url.split("=")[1];
   }
 
-  // Getting the users, and their medss
+  // Getting the users, and their meds
   getUsers();
 
   // A function for handling what happens when the form to create a new meds is submitted
@@ -49,7 +49,47 @@ $(document).ready(function() {
       return;
     }
     // Constructing a newmeds object to hand to the database
+    var startNew = new Date(startInput.val().trim());
+    var startDate = startNew.getFullYear() + '-' + (startNew.getMonth()+1) + '-' + startNew.getDate();
+    
+
+    var startDateTime = startDate + " 03:00:00";
+    console.log(startDateTime);
+    
+    var hourInterval;
+    
+    if(frequencyInput.val().trim() == 'Daily'){
+      hourInterval = (24/timesInput.val().trim());
+    }
+    if(frequencyInput.val().trim() == 'Monthly'){
+      hourInterval = (720/timesInput.val().trim());
+    }
+
+    var newHrInterval = hrTohhmmss(hourInterval);
+    console.log(newHrInterval);
+
+    var mStart = moment(startDateTime,"YYYY-MM-DD HH:mm:ss");
+    console.log(mStart._d);
+    
+    var nextDateTime = moment(mStart._d).add(hourInterval, 'hours');
+    console.log(nextDateTime._d);
+    
+
+    var eventArray = [];
+    console.log("countInput: " + countInput.val().trim());
+
+    for (var i = 0; i < countInput.val().trim(); i++){
+      var med_count_number = (i+1);
+      var event_time = (moment(mStart._d).add((hourInterval*i), 'hours'))._d;
+      var MedId = "tempID";
+      var eventItem = {med_count_number, event_time, MedId};
+      eventArray.push(eventItem);
+    }
+    console.log(eventArray);
+
+
     var newMed = {
+      innerMed: {
       med_name: nameInput
         .val()
         .trim(),
@@ -62,9 +102,12 @@ $(document).ready(function() {
       freq_times: timesInput
         .val()
         .trim(),
+      hr_interval: newHrInterval,
       start_date: startInput
         .val()
         .trim(),
+      first_med: mStart._d,
+      next_med: nextDateTime._d,
       instructions: instructionsInput
         .val()
         .trim(),
@@ -75,7 +118,13 @@ $(document).ready(function() {
         .val()
         .trim(),
       UserId: userSelect.val()
+    },
+      events: eventArray
     };
+
+    
+
+    console.log(newMed);
 
     // If we're updating a meds run updatemeds to update a meds
     // Otherwise run submitmeds to create a whole new meds
@@ -84,18 +133,28 @@ $(document).ready(function() {
       updateMeds(newMed);
     }
     else {
+      console.log("test");
       submitMeds(newMed);
     }
   }
 
-  // Submits a new meds and brings client to blog page upon completion
+
+  function hrTohhmmss(hrs){
+     var sign = hrs < 0 ? "-" : "";
+     var hr = Math.floor(Math.abs(hrs));
+     var min = Math.floor((Math.abs(hrs) * 60) % 60);
+     var sec = "00";
+     return sign + (hr < 10? "0": "") + hr + ":" + (min < 10 ? "0" : "") + min + ":" + sec;
+  }
+
+  // Submits a new meds and brings client to med page upon completion
   function submitMeds(meds) {
     $.post("/api/meds", meds, function() {
       window.location.href = "/med-list";
     });
   }
 
-  // Gets meds data for the current meds if we're editing, or if we're adding to an users existing medss
+  // Gets meds data for the current meds if we're editing, or if we're adding to an users existing meds
   function getMedsData(id, type) {
     var queryUrl;
     switch (type) {

@@ -1,0 +1,244 @@
+//$(document).ready(function() {
+  /* global moment */
+
+  // medsContainer holds all of our meds
+  var medsContainer = $(".meds-container");
+
+  // Click events for the edit and delete buttons
+  $(document).on("click", "button.delete", handleMedsDelete);
+  $(document).on("click", "button.edit", handleMedsEdit);
+  $(document).on("click", "button.pic", obtainMedPics);
+
+
+  // Variable to hold our meds
+  var meds;
+  //var date = new Date();
+
+  // The code below handles the case where we want to get meds meds for a specific user
+  // Looks for a query param in the url for user_id
+  //var url = window.location.search;
+  //var userId;
+  //if (url.indexOf("?user_id=") !== -1) {
+    //userId = url.split("=")[1];
+    //getMeds(userId);
+  //}
+  // If there's no userId we just get all meds as usual
+  //else {
+    //getMeds();
+  //}
+
+  getMeds();
+
+  // This function grabs events from the database and updates the view
+  function getMeds() {
+    //userId = user || "";
+    //if (userId) {
+      //userId = "/?user_id=" + userId;
+    //}
+    $.get("/api/events", function(data) {
+      meds = data;
+      if (!meds || !meds.length) {
+        displayEmpty(date);
+      }
+      else {
+        initializeRows();
+      }
+    });
+  }
+
+  // This function does an API call to delete meds
+  function deleteMeds(id) {
+    $.ajax({
+      method: "DELETE",
+      url: "/api/meds/" + id
+    })
+    .done(function() {
+      getMeds();
+    });
+  }
+
+  // InitializeRows handles appending all of our constructed meds HTML inside medsContainer
+  function initializeRows() {
+    medsContainer.empty();
+    var medsToAdd = [];
+    for (var i = 0; i < meds.length; i++) {
+      medsToAdd.push(createNewRow(meds[i]));
+    }
+    medsContainer.append(medsToAdd);
+  }
+
+  // This function constructs a meds's HTML
+  function createNewRow(meds) {
+
+    console.log(meds);
+
+    var newMedsPanel = $("<div>");
+    newMedsPanel.addClass("panel panel-default");
+    var newMedsPanelHeading = $("<div>");
+    newMedsPanelHeading.addClass("panel-heading");
+    var deleteBtn = $("<button>");
+    deleteBtn.text("x");
+    deleteBtn.addClass("delete btn btn-danger");
+    var editBtn = $("<button>");
+    editBtn.text("EDIT");
+    editBtn.addClass("edit btn btn-info");
+    var picBtn = $("<button>");
+    picBtn.text("View Picture(s)");
+    picBtn.addClass("pic btn btn-success");
+    var newMedsTitle = $("<h2>");
+    var newMedsDate = $("<small>");
+    var newMedsUser = $("<h5>");
+    newMedsUser.text("Med time: " + meds.event_time);
+    newMedsUser.css({
+      float: "right",
+      color: "blue",
+      "margin-top":
+      "-10px"
+    });
+    var newMedsPanelBody = $("<div>");
+    newMedsPanelBody.addClass("panel-body");
+    var newMedsBody = $("<p>");
+    newMedsTitle.text(meds.Med.med_name + "  -  " + meds.Med.med_dose);
+    newMedsBody.text(meds.Med.instructions + " - " + meds.Med.freq_times + " times  -  " + meds.Med.freq_main);
+    newMedsPanelHeading.append(deleteBtn);
+    newMedsPanelHeading.append(editBtn);
+    newMedsPanelHeading.append(picBtn);
+    newMedsPanelHeading.append(newMedsTitle);
+    newMedsPanelHeading.append(newMedsUser);
+    newMedsPanelBody.append(newMedsBody);
+    newMedsPanel.append(newMedsPanelHeading);
+    newMedsPanel.append(newMedsPanelBody);
+    newMedsPanel.data("meds", meds);
+    return newMedsPanel;
+  }
+
+  // This function figures out which meds we want to delete and then calls deletemeds
+  function handleMedsDelete() {
+    var currentMeds = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+    deleteMeds(currentMeds.id);
+  }
+
+  // This function figures out which meds we want to edit and takes it to the appropriate url
+  function handleMedsEdit() {
+    var currentMeds = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+    window.location.href = "/med-manager?meds_id=" + currentMeds.id;
+  }
+
+  // This function displays a messgae when there are no meds
+  function displayEmpty(date) {
+    var query = window.location.search;
+    var partial = "";
+    if (date) {
+      partial = " for date of: " + date;
+    }
+    medsContainer.empty();
+    var messageh2 = $("<h2>");
+    messageh2.css({ "text-align": "center", "margin-top": "50px" });
+    messageh2.html("No meds scheduled" + partial + ", navigate <a href='/med-list" + query +
+    "'>here</a> in order to view all medications.");
+    medsContainer.append(messageh2);
+  }
+
+  function obtainMedPics() {
+    event.preventDefault();
+    $(".slideshow-container").empty();
+    $(".inner-container").empty();
+    var chosenMed = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+
+    console.log("chosenMed: " + chosenMed);
+    var medName = chosenMed.Med.med_name.trim();
+    console.log("medName: " + medName);
+    var medDose = chosenMed.Med.med_dose.trim();
+    console.log("medDose: " + medDose);
+    var medDoseNum = medDose.match(/\d+/)[0].trim();
+    console.log("medDoseNum: " + medDoseNum);
+    var medDoseUnit = (medDose.replace(/[0-9]/g,'')).toUpperCase().trim();
+    console.log("medDoseUnit: " + medDoseUnit);
+    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit.trim();
+    console.log("medDoseNew: " + medDoseNew);
+    var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
+    //Use ajax call to obtain images asychronously
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).done(function(response){
+        console.log("response.nlmRxImages: " + response.nlmRxImages);
+        var likelyArray = [];
+        for(var i = 0; i<response.nlmRxImages.length; i++){
+          if( (response.nlmRxImages[i].name).indexOf(medDoseNew) !== -1){
+            likelyArray.push(response.nlmRxImages[i].imageUrl);
+          }
+        }
+        if(likelyArray.length === 0){
+          alert("No Image available");
+          return;
+        }
+        console.log("likelyArray: " + likelyArray);
+        var carouselContainer = $(".slideshow-container");
+        var item = $(".inner-container");
+        $("#picModal").modal("toggle");
+
+        $.each(likelyArray, function( intIndex, objValue ){
+          console.log("intIndex: " + intIndex);
+          console.log("objValue: " + objValue);
+          item.append($( '<span class = "dot" onclick="currentSlide(' + intIndex + ')"></span>' ));
+          carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div>'));      
+        });
+          $('.carousel-indicators li:first').addClass('active');
+          $('.carousel-inner li:first').addClass('active');
+
+            var slideIndex = 1;
+      showSlides(slideIndex);
+      currentSlide(slideIndex);
+
+    });
+  }
+
+  var slideIndex = 1;
+  showSlides(slideIndex);
+
+  // Next/previous controls
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  };
+
+  // Thumbnail image controls
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  };
+
+  function showSlides(n) {
+    console.log("slideIndex: " + n);
+    var i;
+    var slides = $(".mySlides");
+    console.log("slides.length: " + slides.length);
+    var dots = $(".dot");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none"; 
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    if(n == 1){
+      slides[0].style.display = "block";
+      dots[0].className += " active";
+    };
+    if(n != 1){
+      slides[slideIndex-1].style.display = "block"; 
+      dots[slideIndex-1].className += " active";
+    }
+  };
+
+  
+

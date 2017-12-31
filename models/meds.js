@@ -22,8 +22,24 @@ module.exports = function(sequelize, DataTypes){
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    hr_interval: {
+      type: DataTypes.TIME
+    },
+    start_time: {
+      type: DataTypes.TIME,
+      allowNull: false,
+      defaultValue: 080000
+    },
     start_date: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    first_med: {
+      type: DataTypes.DATE,
+    },
+    next_med:{
+      type: DataTypes.DATE,
     },
     instructions: {
       type: DataTypes.STRING
@@ -42,18 +58,8 @@ module.exports = function(sequelize, DataTypes){
       defaultValue: true
     }
   }, {
-    timestamps: false
+    timestamps: true
   });
-
-  Meds.associate = function(models) {
-
-    Meds.belongsTo(models.User, {
-      foreignKey: {
-        allowNull: false
-      },
-      onDelete: "cascade"
-    });
-  };
 
 return Meds;
 };

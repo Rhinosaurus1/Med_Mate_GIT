@@ -29,13 +29,6 @@ module.exports = function(sequelize, DataTypes){
     timestamps: false
   });
 
-  User.associate = function(models) {
-
-    User.hasMany(models.Meds, {
-      foreignKey: {allowNull: false},
-      onDelete: "cascade"
-    });
-  };
 
 return User;
 };

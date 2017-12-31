@@ -28,4 +28,7 @@ module.exports = function(app) {
     res.sendFile(path.join(__dirname, "../public/user-manager.html"));
   });
 
+  app.get("/today", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/today.html"));
+  });
 };
