@@ -15,20 +15,23 @@ var Op = Sequelize.Op;
 // =============================================================
 module.exports = function(app) {
 
-  var date = new Date();
-  //var newDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + ((date.getDate()-1)+1);
-  var prevDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (date.getDate()-1);
-  var nextDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (date.getDate()+1);
-  //var mNewDate = moment(newDate,"YYYY-MM-DD");
-  //console.log("newDate: " + newDate);
+  var prev = new Date();
+  prev.setHours(0,0,0,0);
+  prev.setHours(prev.getHours()-5);
+
+  var next = new Date();
+  next.setDate(next.getDate()+1);
+  next.setHours(0,0,0,0);
+  next.setHours(next.getHours()-5);
+  next.setSeconds(next.getSeconds()-1);
+
 
   app.get("/api/events", function(req, res) {
     var query = {
       event_time: {
-        [Op.between]: [prevDate, nextDate]
+        [Op.between]: [prev, next]
       }
     }
-
     db.Events.findAll({
       where: query,
       include: [
@@ -40,29 +43,33 @@ module.exports = function(app) {
             }
           ]
         }
-      ]
-      //include: [db.Meds],
-      //include: [db.User]
+      ],
+      order: ['event_time']
     }).then(function(dbEvents) {
       res.json(dbEvents);
     });
   });
 
-  app.post("/api/events", function(req, res) {
-    db.Events.bulkCreate(req.body).then(function(dbEvents) {
-      res.json(dbEvents);
-    });
-  });
-
-  app.put("/api/events", function(req, res) {
+  app.put("/api/events/:id", function(req, res) {
+  	console.log("req.body: " + JSON.stringify(req.body));
     db.Events.update(
-      req.body,
+      {taken_status: true},
       {
         where: {
-          id: req.body.id
+          id: req.params.id
         }
-      }).then(function(dbEvents) {
-        res.json(dbEvents);
+      }).then(function(result) {
+      	db.Meds.update(
+      		{remaining_count: Sequelize.literal('remaining_count - 1')},
+      		{
+      			where: {
+      				id: req.body.Med.id
+      			}
+      		}).then(function(dbEvents){
+        		res.json(dbEvents);
+        	});
       });
   });
+
+
 };
