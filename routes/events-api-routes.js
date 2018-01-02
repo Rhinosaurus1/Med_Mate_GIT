@@ -25,6 +25,19 @@ module.exports = function(app) {
   next.setHours(next.getHours()-5);
   next.setSeconds(next.getSeconds()-1);
 
+  	/*
+	var date = new Date();
+	date.setDate(date.getDate()-1);
+	var newDate = "'" + date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear() + "'";
+	console.log("newDate: " + newDate);
+
+	var d =  new Date();
+	d.setDate(d.getDate()-1);
+	d.setHours(0,0,0,0);
+	console.log(d);
+	*/
+
+
 
   app.get("/api/events", function(req, res) {
     var query = {
