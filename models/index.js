@@ -24,9 +24,32 @@ db.Meds = require('./meds.js')(sequelize, Sequelize);
 db.Events = require('./events.js')(sequelize, Sequelize);
 
 //Relations
-db.Events.belongsTo(db.Meds);  
-db.Meds.hasMany(db.Events);  
-db.Meds.belongsTo(db.User);  
-db.User.hasMany(db.Meds);
+db.Events.belongsTo(db.Meds, {
+	foreignKey: {
+		allowNull: false
+	},
+	onDelete: "cascade"
+});
+
+db.Meds.hasMany(db.Events, {
+	foreignKey: {
+		allowNull: false
+	},
+	onDelete: "cascade"
+	});  
+
+db.Meds.belongsTo(db.User, {
+	foreignKey: {
+		allowNull: false
+	},
+	onDelete: "cascade"
+	});  
+
+db.User.hasMany(db.Meds, {
+	foreignKey: {
+		allowNull: false
+	},
+	onDelete: "cascade"
+	});
 
 module.exports = db;

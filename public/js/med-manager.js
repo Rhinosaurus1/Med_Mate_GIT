@@ -1,4 +1,9 @@
 $(document).ready(function() {
+  
+
+
+
+
   // Getting jQuery references to the meds body, title, form, and user select
   var nameInput = $("#name");
   var doseInput = $("#dose");
@@ -9,8 +14,30 @@ $(document).ready(function() {
   var countInput = $("#count");
   var remainingInput = $("#count");
 
+  /*
+  new Def.Autocompleter.Prefetch('drug_strengths', []);
+  new Def.Autocompleter.Search('rxterms',
+   'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
+  Def.Autocompleter.Event.observeListSelections('rxterms', function() {
+    var drugField = $('#rxterms')[0];
+    var drugFieldVal = drugField.value;
+    var autocomp = drugField.autocomp;
+    var strengths =
+      autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
+    if (strengths)
+      $('#drug_strengths')[0].autocomp.setListAndField(strengths, '');
+  })
+  */
+
+
+
+
   var medManagerForm = $("#med-manager");
   var userSelect = $("#user");
+
+
+
+
   // Adding an event listener for when the form is submitted
   $(medManagerForm).on("submit", handleFormSubmit);
   // Gets the part of the url that comes after the "?" (which we have if we're updating a meds)
@@ -227,4 +254,5 @@ $(document).ready(function() {
       window.location.href = "/med-list";
     });
   }
+
 });

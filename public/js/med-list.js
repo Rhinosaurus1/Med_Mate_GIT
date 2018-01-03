@@ -205,13 +205,17 @@
       .data("meds");
 
     console.log("chosenMed: " + chosenMed);
-    var medName = chosenMed.med_name.trim();
+    var medNameFirst = chosenMed.med_name.replace(" (Oral Pill)","").trim();
+    console.log("medNameFirst: " + medNameFirst);
+    var medName = medNameFirst.trim();
     console.log("medName: " + medName);
     var medDose = chosenMed.med_dose.trim();
     console.log("medDose: " + medDose);
     var medDoseNum = medDose.match(/\d+/)[0].trim();
     console.log("medDoseNum: " + medDoseNum);
-    var medDoseUnit = (medDose.replace(/[0-9]/g,'')).toUpperCase().trim();
+    var medDoseUnitFirst = (medDose.replace("Tab",'')).trim();
+    console.log("medDoseUnitFirst:" + medDoseUnitFirst);
+    var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
     console.log("medDoseUnit: " + medDoseUnit);
     var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit.trim();
     console.log("medDoseNew: " + medDoseNew);

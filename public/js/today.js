@@ -38,6 +38,8 @@
     //}
     $.get("/api/events", function(data) {
       meds = data;
+      var dateTime = new Date();
+      var date = (dateTime.getMonth()+1) + '-' + dateTime.getDate() + '-' + dateTime.getFullYear();
       if (!meds || !meds.length) {
         displayEmpty(date);
       }
@@ -170,7 +172,7 @@
     var query = window.location.search;
     var partial = "";
     if (date) {
-      partial = " for date of: " + date;
+      partial = " for date of:  " + date;
     }
     medsContainer.empty();
     var messageh2 = $("<h2>");
@@ -241,16 +243,21 @@
       .data("meds");
 
     console.log("chosenMed: " + chosenMed);
-    var medName = chosenMed.Med.med_name.trim();
+    var medNameFirst = chosenMed.Med.med_name.replace(" (Oral Pill)","").trim();
+    console.log("medNameFirst: " + medNameFirst);
+    var medName = medNameFirst.trim();
     console.log("medName: " + medName);
     var medDose = chosenMed.Med.med_dose.trim();
     console.log("medDose: " + medDose);
     var medDoseNum = medDose.match(/\d+/)[0].trim();
     console.log("medDoseNum: " + medDoseNum);
-    var medDoseUnit = (medDose.replace(/[0-9]/g,'')).toUpperCase().trim();
+    var medDoseUnitFirst = (medDose.replace("Tab",'')).trim();
+    console.log("medDoseUnitFirst:" + medDoseUnitFirst);
+    var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
     console.log("medDoseUnit: " + medDoseUnit);
     var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit.trim();
     console.log("medDoseNew: " + medDoseNew);
+
     var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
     //Use ajax call to obtain images asychronously
     $.ajax({
