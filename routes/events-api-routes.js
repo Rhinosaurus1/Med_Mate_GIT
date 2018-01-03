@@ -15,34 +15,40 @@ var Op = Sequelize.Op;
 // =============================================================
 module.exports = function(app) {
 
-  var prev = new Date();
-  prev.setHours(0,0,0,0);
-  prev.setHours(prev.getHours()-5);
+	/*
+	var prev = new Date();
+	prev.setHours(0,0,0,0);
+	prev.setHours(prev.getHours()-5);
 
-  var next = new Date();
-  next.setDate(next.getDate()+1);
-  next.setHours(0,0,0,0);
-  next.setHours(next.getHours()-5);
-  next.setSeconds(next.getSeconds()-1);
+	var next = new Date();
+	next.setDate(next.getDate()+1);
+	next.setHours(0,0,0,0);
+	next.setHours(next.getHours()-5);
+	next.setSeconds(next.getSeconds()-1);
 
-  	/*
-	var date = new Date();
-	date.setDate(date.getDate()-1);
-	var newDate = "'" + date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear() + "'";
-	console.log("newDate: " + newDate);
-
-	var d =  new Date();
-	d.setDate(d.getDate()-1);
-	d.setHours(0,0,0,0);
-	console.log(d);
+  	
+	var prevdate = new Date();
+	prevdate.setDate(prevdate.getDate()-1);
+	var prevnewDate = prevdate.getFullYear() + '-' + (prevdate.getMonth()+1) + '-' + prevdate.getDate();
+	console.log("prevnewDate: " + prevnewDate);
 	*/
 
+	var date = new Date();
+	var newDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	newDate = newDate + " 08:00:00";
+	console.log("newDate: " + newDate);
+
+	var nextdate = new Date();
+	nextdate.setDate(nextdate.getDate()+1);
+	var nextnewDate = nextdate.getFullYear() + '-' + (nextdate.getMonth()+1) + '-' + nextdate.getDate();
+	nextnewDate = nextnewDate + " 07:59:59";
+	console.log("nextnewDate: " + nextnewDate);
 
 
   app.get("/api/events", function(req, res) {
     var query = {
       event_time: {
-        [Op.between]: [prev, next]
+        [Op.between]: [newDate, nextnewDate]
       }
     }
     db.Events.findAll({
