@@ -109,7 +109,7 @@
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
-    newMedsUser.text("Med time: " + meds.event_time);
+    newMedsUser.text("Med time: " + moment(meds.event_time).format('MMMM Do YYYY, h:mm:ss a'));
     newMedsUser.css({
       float: "right",
       color: "blue",
