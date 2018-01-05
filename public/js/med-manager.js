@@ -28,7 +28,18 @@ $(document).ready(function() {
       $('#drug_strengths')[0].autocomp.setListAndField(strengths, '');
   })
   */
-
+    new Def.Autocompleter.Prefetch('dose', []);
+    new Def.Autocompleter.Search('name',
+     'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
+    Def.Autocompleter.Event.observeListSelections('name', function() {
+      var drugField = $('#name')[0];
+      var drugFieldVal = drugField.value;
+      var autocomp = drugField.autocomp;
+      var strengths =
+        autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
+      if (strengths)
+        $('#dose')[0].autocomp.setListAndField(strengths, '');
+    })
 
 
 
@@ -87,6 +98,9 @@ $(document).ready(function() {
     
     if(frequencyInput.val().trim() == 'Daily'){
       hourInterval = (24/timesInput.val().trim());
+    }
+    if(frequencyInput.val().trim() == 'Weekly'){
+      hourInterval = (168/timesInput.val().trim());
     }
     if(frequencyInput.val().trim() == 'Monthly'){
       hourInterval = (720/timesInput.val().trim());

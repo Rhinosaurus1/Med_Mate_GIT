@@ -10,13 +10,14 @@
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
-    <script src="js/med-manager.js" type="text/javascript"></script>
+    
     
 
 </head>
 
 <body>
 
+	<script src="js/med-manager.js" type="text/javascript"></script>
 	<link href='https://clin-table-search.lhc.nlm.nih.gov/autocomplete-lhc-versions/15.1.0/autocomplete-lhc_jQueryUI.min.css' rel="stylesheet">
     <script src='https://clin-table-search.lhc.nlm.nih.gov/autocomplete-lhc-versions/15.1.0/autocomplete-lhc_jQuery.min.js'></script>
 
@@ -70,23 +71,6 @@
 		</div>
 	</div>
 
-	<!-- Custom Script -->
-	<script>
-
-	  new Def.Autocompleter.Prefetch('dose', []);
-	  new Def.Autocompleter.Search('name',
-	   'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
-	  Def.Autocompleter.Event.observeListSelections('name', function() {
-	    var drugField = $('#name')[0];
-	    var drugFieldVal = drugField.value;
-	    var autocomp = drugField.autocomp;
-	    var strengths =
-	      autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
-	    if (strengths)
-	      $('#dose')[0].autocomp.setListAndField(strengths, '');
-	  })
-
-	</script>
 	
 </body>
 

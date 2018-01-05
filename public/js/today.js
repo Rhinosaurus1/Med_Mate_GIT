@@ -184,6 +184,7 @@
 
   function obtainMedChart(){
     event.preventDefault();
+    $("#myChart").empty();
     var chosenMed = $(this)
       .parent()
       .parent()
