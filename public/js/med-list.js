@@ -82,7 +82,7 @@
     picBtn.addClass("pic btn btn-success");
     var chartBtn = $("<button>");
     chartBtn.text("View Chart");
-    chartBtn.addClass("chart btn btn-success");
+    chartBtn.addClass("chart btn btn-primary");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
@@ -146,7 +146,12 @@
 
   
   function obtainMedChart(){
+    $("#chartBody").empty();
     event.preventDefault();
+    var newChartCanvas = $("<canvas id='myChart'>");
+    newChartCanvas.width("200px");
+    newChartCanvas.height("200px");
+    $("#chartBody").append(newChartCanvas);
     var chosenMed = $(this)
       .parent()
       .parent()
@@ -205,7 +210,14 @@
       .data("meds");
 
     console.log("chosenMed: " + chosenMed);
-    var medNameFirst = chosenMed.med_name.replace(" (Oral Pill)","").trim();
+    var medNameFirst = chosenMed.med_name;
+    console.log("medNameFirst: " + medNameFirst);
+    if(medNameFirst.includes("/") === true){
+      medNameFirst = chosenMed.med_name.substr(0,chosenMed.med_name.indexOf('/'));
+    }
+    if (medNameFirst.includes("(") === true){
+      medNameFirst = chosenMed.med_name.substr(0,chosenMed.med_name.indexOf('('));
+    }
     console.log("medNameFirst: " + medNameFirst);
     var medName = medNameFirst.trim();
     console.log("medName: " + medName);
@@ -217,7 +229,11 @@
     console.log("medDoseUnitFirst:" + medDoseUnitFirst);
     var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
     console.log("medDoseUnit: " + medDoseUnit);
-    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit.trim();
+    var medDoseUnit2 = (medDoseUnit.replace(/-/g,"")).trim();
+    console.log("medDoseUnit2: " + medDoseUnit2);
+    var medDoseUnit3 = (medDoseUnit2.substr(0,medDoseUnit2.indexOf(' ')));
+    console.log("medDoseUnit3: " + medDoseUnit3);
+    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit3.trim();
     console.log("medDoseNew: " + medDoseNew);
     var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
     //Use ajax call to obtain images asychronously
@@ -227,14 +243,19 @@
     }).done(function(response){
         console.log("response.nlmRxImages: " + response.nlmRxImages);
         var likelyArray = [];
+        if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
+          $("#noPicModal").modal("toggle");
+          return;
+        }
         for(var i = 0; i<response.nlmRxImages.length; i++){
           if( (response.nlmRxImages[i].name).indexOf(medDoseNew) !== -1){
             likelyArray.push(response.nlmRxImages[i].imageUrl);
           }
         }
-        if(likelyArray.length === 0){
-          alert("No Image available");
-          return;
+        if(typeof likelyArray == 'undefined' || likelyArray.length == 0){
+          for(var j = 0; j<response.nlmRxImages.length; j++){
+            likelyArray.push(response.nlmRxImages[j].imageUrl);
+          }
         }
         console.log("likelyArray: " + likelyArray);
         var carouselContainer = $(".slideshow-container");

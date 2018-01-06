@@ -17,26 +17,19 @@
   <div class="container meds">
     <div class="row">
       <div class="col-md-2 col-sm-2">
-        <a class="btn btn-default" href="/med-manager">New Med</a>
+        <a class="btn btn-success" href="/med-manager">New Med</a>
       </div>
       <div class="col-md-2 col-sm-2">
-        <a class="btn btn-default" href="/users">Manage Users</a>
+        <a class="btn btn-warning" href="/users">Manage Users</a>
       </div>
       <div class="col-md-2 col-sm-2">
-        <a class="btn btn-default" href="/today">Today's Meds</a>
+        <a class="btn btn-primary" href="/today">Today's Meds</a>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12 meds-container">
       </div>
     </div>
-    <!--<div class="row chart">
-      <div class ="col-md-4 col-sm-4"></div>
-      <div class="col-md-4 col-sm-4">
-        <canvas id="myChart" width="200px" height="200px"></canvas>
-      </div>
-      <div class ="col-md-4 col-sm-4"></div>
-    </div>-->
   </div>
 
   <!-- Modal -->
@@ -78,21 +71,29 @@
   <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <!--<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
-          <h5 class="modal-title" id="modalLabel">Doses Tracker</h5>
-            </div>-->
-            <div cls="modal-body">
-              <canvas id="myChart" width="200px" height="200px"></canvas>
-             
-            </div>
-            <div class="modal-footer">
+        <div class="modal-body" id="chartBody">
+        </div>
+        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="modal fade" id="noPicModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="panel-body">
+             <h1>I'm sorry, there is no picture available for this medication.  Please contact your doctor if you have any concerns.</h1>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   
   <!-- Custom Script -->

@@ -14,32 +14,18 @@ $(document).ready(function() {
   var countInput = $("#count");
   var remainingInput = $("#count");
 
-  /*
-  new Def.Autocompleter.Prefetch('drug_strengths', []);
-  new Def.Autocompleter.Search('rxterms',
-   'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
-  Def.Autocompleter.Event.observeListSelections('rxterms', function() {
-    var drugField = $('#rxterms')[0];
+  new Def.Autocompleter.Prefetch('dose', []);
+  new Def.Autocompleter.Search('name',
+   'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?maxList=25&ef=STRENGTHS_AND_FORMS');
+  Def.Autocompleter.Event.observeListSelections('name', function() {
+    var drugField = $('#name')[0];
     var drugFieldVal = drugField.value;
     var autocomp = drugField.autocomp;
     var strengths =
       autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
     if (strengths)
-      $('#drug_strengths')[0].autocomp.setListAndField(strengths, '');
+      $('#dose')[0].autocomp.setListAndField(strengths, '');
   })
-  */
-    new Def.Autocompleter.Prefetch('dose', []);
-    new Def.Autocompleter.Search('name',
-     'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS');
-    Def.Autocompleter.Event.observeListSelections('name', function() {
-      var drugField = $('#name')[0];
-      var drugFieldVal = drugField.value;
-      var autocomp = drugField.autocomp;
-      var strengths =
-        autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
-      if (strengths)
-        $('#dose')[0].autocomp.setListAndField(strengths, '');
-    })
 
 
 
@@ -96,13 +82,13 @@ $(document).ready(function() {
     
     var hourInterval;
     
-    if(frequencyInput.val().trim() == 'Daily'){
+    if(frequencyInput.val().trim().toUpperCase() == 'DAILY'){
       hourInterval = (24/timesInput.val().trim());
     }
-    if(frequencyInput.val().trim() == 'Weekly'){
+    if(frequencyInput.val().trim().toUpperCase()  == 'WEEKLY'){
       hourInterval = (168/timesInput.val().trim());
     }
-    if(frequencyInput.val().trim() == 'Monthly'){
+    if(frequencyInput.val().trim().toUpperCase()  == 'MONTHLY'){
       hourInterval = (720/timesInput.val().trim());
     }
 

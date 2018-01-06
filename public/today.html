@@ -17,17 +17,16 @@
   <div class = "container">
     <div class="row top-30">
       <div class="col-md-2 col-sm-2">
-        <a class="btn btn-default" href="/med-manager">New Med</a>
+        <a class="btn btn-success" href="/med-manager">New Med</a>
       </div>
       <div class="col-md-2 col-sm-2">
-        <a class="btn btn-default" href="/med-list">Go to Med List</a>
+        <a class="btn btn-primary" href="/med-list">Go to Med List</a>
       </div>
       <div class="col-md-2 col-sm-2">
-        <a class="btn btn-default" href="/users">Manage Users</a>
+        <a class="btn btn-warning" href="/users">Manage Users</a>
       </div>
-      <div class="col-md-12">
-        <h1 id="datetime"></h1>
-        <h1 id="date"></h1>
+      <div class="col-md-2 col-sm-2">
+        <a class="btn btn-danger" id="emailBtn">Send Email Reminder</a>
       </div>
     </div>
     
@@ -48,10 +47,7 @@
             <div class="modal-body">
 
                 <div>
-                  <div id="myCarousel" class="slideshow-container">
-                    
-
-                  
+                  <div id="myCarousel" class="slideshow-container"> 
                   </div>
                   <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
                   <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -68,14 +64,28 @@
       </div>
     </div>
   </div>
+
   <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-            <div cls="modal-body">
-              <canvas id="myChart" width="200px" height="200px"></canvas>
-             
-            </div>
-            <div class="modal-footer">
+        <div class="modal-body" id="chartBody">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="noPicModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="panel-body">
+             <h1>I'm sorry, there is no picture available for this medication.  Please contact your doctor if you have any concerns.</h1>
+          </div>
+        </div>
+        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>

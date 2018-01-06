@@ -5,19 +5,34 @@
   var medsContainer = $(".meds-container");
 
   // Click events for the edit and delete buttons
-  $(document).on("click", "button.delete", handleMedsDelete);
-  $(document).on("click", "button.edit", handleMedsEdit);
   $(document).on("click", "button.pic", obtainMedPics);
   $(document).on("click", "button.taken", handlePillTaken);
   $(document).on("click", "button.chart", obtainMedChart);
+  //$("#emailBtn").click(sendEmail());
+
+  /*
+  function sendEmail() {
+    $.get("/api/send/:email", function(data) {
+      meds = data;
+      var dateTime = new Date();
+      var date = (dateTime.getMonth()+1) + '-' + dateTime.getDate() + '-' + dateTime.getFullYear();
+      if (!meds || !meds.length) {
+        displayEmpty(date);
+      }
+      else {
+        initializeRows();
+      }
+    });
+  }
+  */
 
   // Variable to hold our meds
   var meds;
-  //var date = new Date();
 
-  // The code below handles the case where we want to get meds meds for a specific user
+  //The code below handles the case where we want to get meds meds for a specific user
   // Looks for a query param in the url for user_id
-  //var url = window.location.search;
+  /*
+  var url = window.location.search;
   //var userId;
   //if (url.indexOf("?user_id=") !== -1) {
     //userId = url.split("=")[1];
@@ -27,7 +42,7 @@
   //else {
     //getMeds();
   //}
-
+  */
   getMeds();
 
   // This function grabs events from the database and updates the view
@@ -49,16 +64,6 @@
     });
   }
 
-  // This function does an API call to delete meds
-  function deleteMeds(id) {
-    $.ajax({
-      method: "DELETE",
-      url: "/api/meds/" + id
-    })
-    .done(function() {
-      getMeds();
-    });
-  }
 
   function takeMeds(currentMed) {
     console.log("takeMeds id: " + currentMed.id);
@@ -91,12 +96,6 @@
     newMedsPanel.addClass("panel panel-default");
     var newMedsPanelHeading = $("<div>");
     newMedsPanelHeading.addClass("panel-heading");
-    var deleteBtn = $("<button>");
-    deleteBtn.text("x");
-    deleteBtn.addClass("delete btn btn-danger");
-    var editBtn = $("<button>");
-    editBtn.text("EDIT");
-    editBtn.addClass("edit btn btn-info");
     var picBtn = $("<button>");
     picBtn.text("View Picture(s)");
     picBtn.addClass("pic btn btn-success");
@@ -105,7 +104,7 @@
     takenBtn.addClass("taken btn btn-warning");
     var chartBtn = $("<button>");
     chartBtn.text("View Chart");
-    chartBtn.addClass("chart btn btn-success");
+    chartBtn.addClass("chart btn btn-primary");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
@@ -121,8 +120,6 @@
     var newMedsBody = $("<p>");
     newMedsTitle.text(meds.Med.med_name + "  -  " + meds.Med.med_dose);
     newMedsBody.text(meds.Med.instructions + " - " + meds.Med.freq_times + " times  -  " + meds.Med.freq_main);
-    newMedsPanelHeading.append(deleteBtn);
-    newMedsPanelHeading.append(editBtn);
     newMedsPanelHeading.append(picBtn);
     newMedsPanelHeading.append(chartBtn);
     if(meds.taken_status == false){
@@ -140,23 +137,6 @@
     return newMedsPanel;
   }
 
-  // This function figures out which meds we want to delete and then calls deletemeds
-  function handleMedsDelete() {
-    var currentMeds = $(this)
-      .parent()
-      .parent()
-      .data("meds");
-    deleteMeds(currentMeds.id);
-  }
-
-  // This function figures out which meds we want to edit and takes it to the appropriate url
-  function handleMedsEdit() {
-    var currentMeds = $(this)
-      .parent()
-      .parent()
-      .data("meds");
-    window.location.href = "/med-manager?meds_id=" + currentMeds.id;
-  }
 
   function handlePillTaken() {
     var currentMeds = $(this)
@@ -183,15 +163,19 @@
   }
 
   function obtainMedChart(){
+    $("#chartBody").empty();
     event.preventDefault();
-    $("#myChart").empty();
+    var newChartCanvas = $("<canvas id='myChart'>");
+    newChartCanvas.width("200px");
+    newChartCanvas.height("200px");
+    $("#chartBody").append(newChartCanvas);
     var chosenMed = $(this)
       .parent()
       .parent()
       .data("meds");
     var medName = chosenMed.Med.med_name.trim();
-    var doseRemain = chosenMed.Med.remaining_count
-    var doseInitial = chosenMed.Med.initial_count
+    var doseRemain = chosenMed.Med.remaining_count;
+    var doseInitial = chosenMed.Med.initial_count;
     console.log("medName: " + medName);
     $("#chartModal").modal("toggle");
       var ctx = document.getElementById("myChart").getContext('2d');
@@ -244,7 +228,14 @@
       .data("meds");
 
     console.log("chosenMed: " + chosenMed);
-    var medNameFirst = chosenMed.Med.med_name.replace(" (Oral Pill)","").trim();
+    var medNameFirst = chosenMed.Med.med_name;
+    console.log("medNameFirst: " + medNameFirst);
+    if(medNameFirst.includes("/") === true){
+      medNameFirst = chosenMed.Med.med_name.substr(0,chosenMed.Med.med_name.indexOf('/'));
+    }
+    if (medNameFirst.includes("(") === true){
+      medNameFirst = chosenMed.Med.med_name.substr(0,chosenMed.Med.med_name.indexOf('('));
+    }
     console.log("medNameFirst: " + medNameFirst);
     var medName = medNameFirst.trim();
     console.log("medName: " + medName);
@@ -256,7 +247,11 @@
     console.log("medDoseUnitFirst:" + medDoseUnitFirst);
     var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
     console.log("medDoseUnit: " + medDoseUnit);
-    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit.trim();
+    var medDoseUnit2 = (medDoseUnit.replace(/-/g,"")).trim();
+    console.log("medDoseUnit2: " + medDoseUnit2);
+    var medDoseUnit3 = (medDoseUnit2.substr(0,medDoseUnit2.indexOf(' ')));
+    console.log("medDoseUnit3: " + medDoseUnit3);
+    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit3.trim();
     console.log("medDoseNew: " + medDoseNew);
 
     var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
@@ -265,16 +260,21 @@
       url: queryURL,
       method: "GET"
     }).done(function(response){
-        console.log("response.nlmRxImages: " + response.nlmRxImages);
+        console.log("response.nlmRxImages: " + JSON.stringify(response.nlmRxImages));
         var likelyArray = [];
+        if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
+          $("#noPicModal").modal("toggle");
+          return;
+        }
         for(var i = 0; i<response.nlmRxImages.length; i++){
           if( (response.nlmRxImages[i].name).indexOf(medDoseNew) !== -1){
             likelyArray.push(response.nlmRxImages[i].imageUrl);
           }
         }
-        if(likelyArray.length === 0){
-          alert("No Image available");
-          return;
+        if(typeof likelyArray == 'undefined' || likelyArray.length == 0){
+          for(var j = 0; j<response.nlmRxImages.length; j++){
+            likelyArray.push(response.nlmRxImages[j].imageUrl);
+          }
         }
         console.log("likelyArray: " + likelyArray);
         var carouselContainer = $(".slideshow-container");

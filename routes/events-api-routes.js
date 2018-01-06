@@ -91,4 +91,61 @@ module.exports = function(app) {
   });
 
 
+  //email route
+  /*
+  app.get("api/send/:email", function(req,res){
+    
+    //set email address as entered email
+    var emailAddress = req.params.email;
+
+    //get all unpaid bills
+    bills.selectAllUnpaid(function(data){
+      var paymentObj = {
+        payments: data
+      };
+
+      //set up node mailer default sender
+      var transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        auth: {
+            user: 'billstopay109@gmail.com',
+            pass: 'blake150'
+        }
+      });
+
+      //get month and year for email
+      var monthsArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      var date = new Date();
+      var month = monthsArray[date.getMonth()];
+      var year = date.getFullYear();
+      var monthYear = month+"-"+year;
+
+      var billText = "";
+
+      //loop through payments due and html-ify for email, adding to total text
+      for(i=0; i<paymentObj.payments.length; i++){
+        var billItem = ("<p>Bill Name:   <b>" + paymentObj.payments[i].bill_name + "</b>      Due:    <b>" + paymentObj.payments[i].month_due_formatted + "</b></p>");
+        billText = billText + billItem;
+      };
+
+      //set up email to send, to , from, subject, text
+      var mailOptions = {
+        from: 'billstopay109@gmail.com',
+        to: emailAddress,
+        subject: "Bills due in " + monthYear,
+        text: "Bills due in " + monthYear,
+        html: "<p><b>THE FOLLOWING BILLS ARE DUE IN " +monthYear+ "</b></p>" + billText
+      };
+
+      //send email, log error if any, return "sent" if no error
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+          }
+      });
+      res.send("sent");
+    });
+  });
+  */
 };
