@@ -8,23 +8,20 @@
   $(document).on("click", "button.pic", obtainMedPics);
   $(document).on("click", "button.taken", handlePillTaken);
   $(document).on("click", "button.chart", obtainMedChart);
-  //$("#emailBtn").click(sendEmail());
+  $(document).on("click", "#emailBtn", sendEmail);
 
-  /*
-  function sendEmail() {
-    $.get("/api/send/:email", function(data) {
-      meds = data;
-      var dateTime = new Date();
-      var date = (dateTime.getMonth()+1) + '-' + dateTime.getDate() + '-' + dateTime.getFullYear();
-      if (!meds || !meds.length) {
-        displayEmpty(date);
-      }
-      else {
-        initializeRows();
-      }
+
+  function sendEmail(){
+    event.preventDefault();
+    var emailAddress = $("#email_input").val().trim();
+    console.log("emailAddress: " + emailAddress);
+      $.get("api/events/send/" + emailAddress, function(response){
+        console.log("response: " + response);
+        if(response == "sent"){
+            alert("Email has been sent to "+ emailAddress +" Please check inbox!");
+        }
     });
   }
-  */
 
   // Variable to hold our meds
   var meds;
