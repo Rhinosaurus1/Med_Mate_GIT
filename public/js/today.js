@@ -15,10 +15,12 @@
     event.preventDefault();
     var emailAddress = $("#email_input").val().trim();
     console.log("emailAddress: " + emailAddress);
+    var form = document.getElementById("emailForm");
+    form.reset();
       $.get("api/events/send/" + emailAddress, function(response){
         console.log("response: " + response);
         if(response == "sent"){
-            alert("Email has been sent to "+ emailAddress +" Please check inbox!");
+          alert("Email has been sent to "+ emailAddress +" Please check inbox!");
         }
     });
   }
