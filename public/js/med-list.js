@@ -17,6 +17,8 @@ $(document).ready(function() {
   // If we have this section in our url, we pull out the meds id from the url
   // In '?meds_id=1', medsId is 1
   var url = window.location.search;
+
+  console.log("URL: " + url);
   var userId;
 
   if (url.lastIndexOf("?user_id=") !== -1) {
@@ -47,9 +49,7 @@ $(document).ready(function() {
   // This function grabs meds from the database and updates the view
   function getMeds(user) {
     userId = user || "";
-    if (userId) {
-      var link = "/?user_id=" + userId;
-    }
+    var link = "/?user_id=" + userId;
     $.get("/api/meds" + link, function(data) {
       meds = data;
       if (!meds || !meds.length) {

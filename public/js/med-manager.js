@@ -36,6 +36,7 @@ $(document).ready(function() {
   var url = window.location.search;
   var medsId;
   var userId;
+
   // Sets a flag for whether or not we're updating a meds to be false initially
   var updating = false;
 
@@ -189,7 +190,7 @@ $(document).ready(function() {
   // Submits a new meds and brings client to med page upon completion
   function submitMeds(meds) {
     $.post("/api/meds", meds, function() {
-      window.location.href = "/med-list/?user_id=" + userId;
+      window.location.href = "/med-list?user_id=" + userId;
     });
   }
 
@@ -257,13 +258,15 @@ $(document).ready(function() {
 
   // Update a given meds, bring user to the blog page when done
   function updateMeds(meds) {
+    console.log("update meds: " + JSON.stringify(meds));
     $.ajax({
       method: "PUT",
       url: "/api/meds",
       data: meds
     })
     .done(function() {
-      window.location.href = "/med-list/?user_id=" + userId;
+      console.log("DONE")
+      ///window.location.href = "/med-list?user_id=" + userId;
     });
   }
 
