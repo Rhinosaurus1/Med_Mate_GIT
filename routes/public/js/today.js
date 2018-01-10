@@ -1,0 +1,337 @@
+//$(document).ready(function() {
+  /* global moment */
+
+  // medsContainer holds all of our meds
+  var medsContainer = $(".meds-container");
+
+  // Click events for the edit and delete buttons
+  $(document).on("click", "button.pic", obtainMedPics);
+  $(document).on("click", "button.taken", handlePillTaken);
+  $(document).on("click", "button.chart", obtainMedChart);
+  $(document).on("click", "#emailBtn", sendEmail);
+
+
+  function sendEmail(){
+    event.preventDefault();
+    var emailAddress = $("#email_input").val().trim();
+    console.log("emailAddress: " + emailAddress);
+    var form = document.getElementById("emailForm");
+    form.reset();
+      $.get("api/events/send/" + emailAddress, function(response){
+        console.log("response: " + response);
+        if(response == "sent"){
+          alert("Email has been sent to "+ emailAddress +" Please check inbox!");
+        }
+    });
+  }
+
+  // Variable to hold our meds
+  var meds;
+
+  //The code below handles the case where we want to get meds meds for a specific user
+  // Looks for a query param in the url for user_id
+  /*
+  var url = window.location.search;
+  //var userId;
+  //if (url.indexOf("?user_id=") !== -1) {
+    //userId = url.split("=")[1];
+    //getMeds(userId);
+  //}
+  // If there's no userId we just get all meds as usual
+  //else {
+    //getMeds();
+  //}
+  */
+  getMeds();
+
+  // This function grabs events from the database and updates the view
+  function getMeds() {
+    //userId = user || "";
+    //if (userId) {
+      //userId = "/?user_id=" + userId;
+    //}
+    $.get("/api/events", function(data) {
+      meds = data;
+      var dateTime = new Date();
+      var date = (dateTime.getMonth()+1) + '-' + dateTime.getDate() + '-' + dateTime.getFullYear();
+      if (!meds || !meds.length) {
+        displayEmpty(date);
+      }
+      else {
+        initializeRows();
+      }
+    });
+  }
+
+
+  function takeMeds(currentMed) {
+    console.log("takeMeds id: " + currentMed.id);
+    $.ajax({
+      method: "PUT",
+      url: "/api/events/" + currentMed.id,
+      data: currentMed
+    })
+    .done(function() {
+      getMeds();
+    });
+  }
+
+  // InitializeRows handles appending all of our constructed meds HTML inside medsContainer
+  function initializeRows() {
+    medsContainer.empty();
+    var medsToAdd = [];
+    for (var i = 0; i < meds.length; i++) {
+      medsToAdd.push(createNewRow(meds[i]));
+    }
+    medsContainer.append(medsToAdd);
+  }
+
+  // This function constructs a meds's HTML
+  function createNewRow(meds) {
+
+    console.log(meds);
+
+    var newMedsPanel = $("<div>");
+    newMedsPanel.addClass("panel panel-default");
+    var newMedsPanelHeading = $("<div>");
+    newMedsPanelHeading.addClass("panel-heading");
+    var picBtn = $("<button>");
+    picBtn.text("View Picture(s)");
+    picBtn.addClass("pic btn btn-success");
+    var takenBtn = $("<button>");
+    takenBtn.text("Confirm Pill Taken");
+    takenBtn.addClass("taken btn btn-warning");
+    var chartBtn = $("<button>");
+    chartBtn.text("View Chart");
+    chartBtn.addClass("chart btn btn-primary");
+    var newMedsTitle = $("<h2>");
+    var newMedsDate = $("<small>");
+    var newMedsUser = $("<h5>");
+    newMedsUser.text("Med time: " + moment(meds.event_time).add(5, 'hours').format('MMMM Do YYYY, h:mm:ss a'));
+    newMedsUser.css({
+      float: "right",
+      color: "blue",
+      "margin-top":
+      "-10px"
+    });
+    var newMedsPanelBody = $("<div>");
+    newMedsPanelBody.addClass("panel-body");
+    var newMedsBody = $("<p>");
+    newMedsTitle.text(meds.Med.med_name + "  -  " + meds.Med.med_dose);
+    newMedsBody.text(meds.Med.instructions + " - " + meds.Med.freq_times + " times  -  " + meds.Med.freq_main);
+    newMedsPanelHeading.append(picBtn);
+    newMedsPanelHeading.append(chartBtn);
+    if(meds.taken_status == false){
+      newMedsPanelHeading.append(takenBtn);
+    }
+    else if(meds.taken_status == true){
+      newMedsPanelHeading.append("<h3>Pill already taken</h3>");
+    }
+    newMedsPanelHeading.append(newMedsTitle);
+    newMedsPanelHeading.append(newMedsUser);
+    newMedsPanelBody.append(newMedsBody);
+    newMedsPanel.append(newMedsPanelHeading);
+    newMedsPanel.append(newMedsPanelBody);
+    newMedsPanel.data("meds", meds);
+    return newMedsPanel;
+  }
+
+
+  function handlePillTaken() {
+    var currentMeds = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+      console.log("current meds: " + JSON.stringify(currentMeds));
+    takeMeds(currentMeds);
+  }
+
+  // This function displays a messgae when there are no meds
+  function displayEmpty(date) {
+    var query = window.location.search;
+    var partial = "";
+    if (date) {
+      partial = " for date of:  " + date;
+    }
+    medsContainer.empty();
+    var messageh2 = $("<h2>");
+    messageh2.css({ "text-align": "center", "margin-top": "50px" });
+    messageh2.html("No meds scheduled" + partial + ", navigate <a href='/med-list" + query +
+    "'>here</a> in order to view all medications.");
+    medsContainer.append(messageh2);
+  }
+
+  function obtainMedChart(){
+    $("#chartBody").empty();
+    event.preventDefault();
+    var newChartCanvas = $("<canvas id='myChart'>");
+    newChartCanvas.width("200px");
+    newChartCanvas.height("200px");
+    $("#chartBody").append(newChartCanvas);
+    var chosenMed = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+    var medName = chosenMed.Med.med_name.trim();
+    var doseRemain = chosenMed.Med.remaining_count;
+    var doseInitial = chosenMed.Med.initial_count;
+    console.log("medName: " + medName);
+    $("#chartModal").modal("toggle");
+      var ctx = document.getElementById("myChart").getContext('2d');
+      var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ["Doses Taken", "Doses Remaining"],
+            datasets: [{
+                label: 'meds taken',
+                data: [doseInitial-doseRemain, doseRemain],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            cutoutPercentage: 50,
+            title: {
+              display: true,
+              fontSize: 40,
+              text: 'Dose Tracker for ' + medName
+            }
+        }
+
+      });
+  }
+
+
+  function obtainMedPics() {
+    event.preventDefault();
+    $(".slideshow-container").empty();
+    $(".inner-container").empty();
+    var chosenMed = $(this)
+      .parent()
+      .parent()
+      .data("meds");
+
+    console.log("chosenMed: " + chosenMed);
+    var medNameFirst = chosenMed.Med.med_name;
+    console.log("medNameFirst: " + medNameFirst);
+    if(medNameFirst.includes("/") === true){
+      medNameFirst = chosenMed.Med.med_name.substr(0,chosenMed.Med.med_name.indexOf('/'));
+    }
+    if (medNameFirst.includes("(") === true){
+      medNameFirst = chosenMed.Med.med_name.substr(0,chosenMed.Med.med_name.indexOf('('));
+    }
+    console.log("medNameFirst: " + medNameFirst);
+    var medName = medNameFirst.trim();
+    console.log("medName: " + medName);
+    var medDose = chosenMed.Med.med_dose.trim();
+    console.log("medDose: " + medDose);
+    var medDoseNum = medDose.match(/\d+/)[0].trim();
+    console.log("medDoseNum: " + medDoseNum);
+    var medDoseUnitFirst = (medDose.replace("Tab",'')).trim();
+    console.log("medDoseUnitFirst:" + medDoseUnitFirst);
+    var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
+    console.log("medDoseUnit: " + medDoseUnit);
+    var medDoseUnit2 = (medDoseUnit.replace(/-/g,"")).trim();
+    console.log("medDoseUnit2: " + medDoseUnit2);
+    var medDoseUnit3 = (medDoseUnit2.substr(0,medDoseUnit2.indexOf(' ')));
+    console.log("medDoseUnit3: " + medDoseUnit3);
+    var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit3.trim();
+    console.log("medDoseNew: " + medDoseNew);
+
+    var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
+    //Use ajax call to obtain images asychronously
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).done(function(response){
+        console.log("response.nlmRxImages: " + JSON.stringify(response.nlmRxImages));
+        var likelyArray = [];
+        if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
+          $("#noPicModal").modal("toggle");
+          return;
+        }
+        for(var i = 0; i<response.nlmRxImages.length; i++){
+          if( (response.nlmRxImages[i].name).indexOf(medDoseNew) !== -1){
+            likelyArray.push(response.nlmRxImages[i].imageUrl);
+          }
+        }
+        if(typeof likelyArray == 'undefined' || likelyArray.length == 0){
+          for(var j = 0; j<response.nlmRxImages.length; j++){
+            likelyArray.push(response.nlmRxImages[j].imageUrl);
+          }
+        }
+        console.log("likelyArray: " + likelyArray);
+        var carouselContainer = $(".slideshow-container");
+        var item = $(".inner-container");
+        $("#picModal").modal("toggle");
+
+        $.each(likelyArray, function( intIndex, objValue ){
+          console.log("intIndex: " + intIndex);
+          console.log("objValue: " + objValue);
+          item.append($( '<span class = "dot" onclick="currentSlide(' + intIndex + ')"></span>' ));
+          carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div>'));      
+        });
+          $('.carousel-indicators li:first').addClass('active');
+          $('.carousel-inner li:first').addClass('active');
+
+            var slideIndex = 1;
+      showSlides(slideIndex);
+      currentSlide(slideIndex);
+
+    });
+  }
+
+  var slideIndex = 1;
+  showSlides(slideIndex);
+
+  // Next/previous controls
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  };
+
+  // Thumbnail image controls
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  };
+
+  function showSlides(n) {
+    console.log("slideIndex: " + n);
+    var i;
+    var slides = $(".mySlides");
+    console.log("slides.length: " + slides.length);
+    var dots = $(".dot");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none"; 
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    if(n == 1){
+      slides[0].style.display = "block";
+      dots[0].className += " active";
+    };
+    if(n != 1){
+      slides[slideIndex-1].style.display = "block"; 
+      dots[slideIndex-1].className += " active";
+    }
+  };
+
+  
+
