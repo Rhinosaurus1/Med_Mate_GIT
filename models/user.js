@@ -1,19 +1,21 @@
+var bcrypt = require('bcrypt');
+
 module.exports = function(sequelize, DataTypes){
 
   var User = sequelize.define("User", {
 
-    user_name: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
         len: [1]
       }
     },
-    login_name: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    email_address: {
+    email: {
       type: DataTypes.STRING,
     },
     password: {
@@ -25,10 +27,18 @@ module.exports = function(sequelize, DataTypes){
       allowNull: false,
       defaultValue: true
     }
-  }, {
-    timestamps: false
+  },{
+  	hooks: {
+  		beforeCreate: (user) => {
+  			const salt = bcrypt.genSaltSync();
+  			user.password = bcrypt.hashSync(user.password, salt);
+  		}
+  	} 
   });
 
+User.prototype.validPassword = function(password) {
+  return bcrypt.compareSync(password,this.password)  
+}
 
 return User;
 };

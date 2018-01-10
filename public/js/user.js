@@ -2,6 +2,7 @@ $(document).ready(function() {
   // Getting references to the name input and User container, as well as the table body
   var nameInput = $("#user-name");
   var loginInput = $("#login-name");
+  var emailInput = $("#email");
   var passwordInput = $("#password");
   var userList = $("tbody");
   var userContainer = $(".user-container");
@@ -17,15 +18,18 @@ $(document).ready(function() {
   function handleUserFormSubmit(event) {
     event.preventDefault();
     // Don't do anything if the name fields hasn't been filled out
-    if (!nameInput.val().trim().trim() || !loginInput.val().trim().trim() || !passwordInput.val().trim().trim()) {
+    if (!nameInput.val().trim().trim() || !loginInput.val().trim().trim() || !emailInput.val().trim().trim() || !passwordInput.val().trim().trim()) {
       return;
     }
     // Calling the upsertUser function and passing in the value of the name input
     var userData = {
-      user_name: nameInput
+      name: nameInput
         .val()
         .trim(),
-      login_name: loginInput
+      username: loginInput
+        .val()
+        .trim(),
+      email: emailInput
         .val()
         .trim(),
       password: passwordInput
@@ -47,8 +51,8 @@ $(document).ready(function() {
   function createUserRow(userData) {
     var newTr = $("<tr>");
     newTr.data("user", userData);
-    newTr.append("<td>" + userData.user_name + "</td>");
-    newTr.append("<td> " + userData.login_name + "</td>");
+    newTr.append("<td>" + userData.name + "</td>");
+    newTr.append("<td> " + userData.username + "</td>");
     newTr.append("<td><a href='/med-list?user_id=" + userData.id + "'>Go to Meds</a></td>");
     newTr.append("<td><a href='/med-manager?user_id=" + userData.id + "'>Add a Med</a></td>");
     newTr.append("<td><a style='cursor:pointer;color:red' class='delete-user'>Delete User</a></td>");

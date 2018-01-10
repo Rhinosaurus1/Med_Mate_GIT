@@ -239,7 +239,7 @@ $(document).ready(function() {
   function createUserRow(user) {
     var listOption = $("<option>");
     listOption.attr("value", user.id);
-    listOption.text(user.user_name);
+    listOption.text(user.username);
     return listOption;
   }
 
