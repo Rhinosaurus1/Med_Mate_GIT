@@ -1,4 +1,4 @@
-//$(document).ready(function() {
+$(document).ready(function() {
   /* global moment */
 
   // medsContainer holds all of our meds
@@ -27,30 +27,39 @@
 
   // Variable to hold our meds
   var meds;
-
   //The code below handles the case where we want to get meds meds for a specific user
   // Looks for a query param in the url for user_id
-  /*
+
   var url = window.location.search;
-  //var userId;
-  //if (url.indexOf("?user_id=") !== -1) {
-    //userId = url.split("=")[1];
-    //getMeds(userId);
-  //}
-  // If there's no userId we just get all meds as usual
-  //else {
-    //getMeds();
-  //}
-  */
-  getMeds();
+  var userId;
+
+  if (url.indexOf("?user_id=") !== -1) {
+    userId = url.split("=")[1];
+    console.log(userId);
+    getMeds(userId);
+  }
+
+  $(document).on("click", "#dashBtn", goToDashboard);
+  $(document).on("click", "#newMedBtn", goToNewMed);
+  $(document).on("click", "#medListBtn", goToMedList);
+
+
+  function goToDashboard(){
+    window.location.href='/dashboard?user_id=' + userId; 
+  }
+
+  function goToNewMed(){
+    window.location.href='/med-manager?user_id=' + userId; 
+  }
+
+  function goToMedList(){
+    window.location.href='/med-list?user_id=' + userId; 
+  }
 
   // This function grabs events from the database and updates the view
-  function getMeds() {
-    //userId = user || "";
-    //if (userId) {
-      //userId = "/?user_id=" + userId;
-    //}
-    $.get("/api/events", function(data) {
+  function getMeds(user) {
+    userId = user || "";
+    $.get("/api/events/" + userId , function(data) {
       meds = data;
       var dateTime = new Date();
       var date = (dateTime.getMonth()+1) + '-' + dateTime.getDate() + '-' + dateTime.getFullYear();
@@ -72,7 +81,7 @@
       data: currentMed
     })
     .done(function() {
-      getMeds();
+      getMeds(userId);
     });
   }
 
@@ -333,5 +342,6 @@
     }
   };
 
+});
   
 

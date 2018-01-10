@@ -20,6 +20,24 @@ $(document).ready(function() {
     userId = url.split("=")[1];
   }
 
+  console.log("USER ID " + userId);
+
+  $(document).on("click", "#medListBtn", goToMedList);
+  $(document).on("click", "#newMedBtn", goToNewMed);
+  $(document).on("click", "#todayBtn", goToToday);
+
+
+  function goToMedList(){
+    window.location.href='/med-list?user_id=' + userId; 
+  }
+
+  function goToNewMed(){
+    window.location.href='/med-manager?user_id=' + userId; 
+  }
+
+  function goToToday(){
+    window.location.href='/today?user_id=' + userId; 
+  }
 
   // Getting the intiial list of Users
   getUsers(userId);

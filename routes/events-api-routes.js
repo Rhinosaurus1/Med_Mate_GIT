@@ -20,19 +20,19 @@ module.exports = function(app) {
   });
 
 
-	var date = new Date();
-	var newDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-	newDate = newDate + " 08:00:00";
-	console.log("newDate: " + newDate);
+  var date = new Date();
+  var newDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+  newDate = newDate + " 08:00:00";
+  console.log("newDate: " + newDate);
 
-	var nextdate = new Date();
-	nextdate.setDate(nextdate.getDate()+1);
-	var nextnewDate = nextdate.getFullYear() + '-' + (nextdate.getMonth()+1) + '-' + nextdate.getDate();
-	nextnewDate = nextnewDate + " 07:59:59";
-	console.log("nextnewDate: " + nextnewDate);
+  var nextdate = new Date();
+  nextdate.setDate(nextdate.getDate()+1);
+  var nextnewDate = nextdate.getFullYear() + '-' + (nextdate.getMonth()+1) + '-' + nextdate.getDate();
+  nextnewDate = nextnewDate + " 07:59:59";
+  console.log("nextnewDate: " + nextnewDate);
 
 
-  app.get("/api/events", function(req, res) {
+  app.get("/api/events/:id", function(req, res) {
     var query = {
       event_time: {
         [Op.between]: [newDate, nextnewDate]
@@ -43,6 +43,7 @@ module.exports = function(app) {
       include: [
         {
           model: db.Meds,
+          where: {UserId: req.params.id},
           include: [
             {
               model: db.User
@@ -144,7 +145,7 @@ module.exports = function(app) {
 
 
   app.put("/api/events/:id", function(req, res) {
-  	console.log("req.body: " + JSON.stringify(req.body));
+    console.log("req.body: " + JSON.stringify(req.body));
     db.Events.update(
       {taken_status: true},
       {
@@ -152,15 +153,15 @@ module.exports = function(app) {
           id: req.params.id
         }
       }).then(function(result) {
-      	db.Meds.update(
-      		{remaining_count: Sequelize.literal('remaining_count - 1')},
-      		{
-      			where: {
-      				id: req.body.Med.id
-      			}
-      		}).then(function(dbEvents){
-        		res.json(dbEvents);
-        	});
+        db.Meds.update(
+          {remaining_count: Sequelize.literal('remaining_count - 1')},
+          {
+            where: {
+              id: req.body.Med.id
+            }
+          }).then(function(dbEvents){
+            res.json(dbEvents);
+          });
       });
   });
 

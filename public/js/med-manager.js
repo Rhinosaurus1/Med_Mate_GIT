@@ -1,9 +1,4 @@
 $(document).ready(function() {
-  
-
-
-
-
   // Getting jQuery references to the meds body, title, form, and user select
   var nameInput = $("#name");
   var doseInput = $("#dose");
@@ -53,6 +48,23 @@ $(document).ready(function() {
   // Otherwise if we have an user_id in our url, preset the user select box to be our user
   else if (url.indexOf("?user_id=") !== -1) {
     userId = url.split("=")[1];
+  }
+
+  $(document).on("click", "#dashBtn", goToDashboard);
+  $(document).on("click", "#medListBtn", goToMedList);
+  $(document).on("click", "#todayBtn", goToToday);
+
+
+  function goToDashboard(){
+    window.location.href='/dashboard?user_id=' + userId; 
+  }
+
+  function goToMedList(){
+    window.location.href='/med-list?user_id=' + userId; 
+  }
+
+  function goToToday(){
+    window.location.href='/today?user_id=' + userId; 
   }
 
   // Getting the users, and their meds
@@ -177,7 +189,7 @@ $(document).ready(function() {
   // Submits a new meds and brings client to med page upon completion
   function submitMeds(meds) {
     $.post("/api/meds", meds, function() {
-      window.location.href = "/med-list";
+      window.location.href = "/med-list/?user_id=" + userId;
     });
   }
 
@@ -204,7 +216,7 @@ $(document).ready(function() {
         timesInput.val(data.freq_times);
         startInput.val(data.start_date); 
         instructionsInput.val(data.instructions); 
-        countInput.val(data.remaining_count);
+        countInput.val(data.initial_count);
         userId = data.UserId || data.id;
         // If we have a meds with this id, set a flag for us to know to update the meds
         // when we hit submit
@@ -251,7 +263,7 @@ $(document).ready(function() {
       data: meds
     })
     .done(function() {
-      window.location.href = "/med-list";
+      window.location.href = "/med-list/?user_id=" + userId;
     });
   }
 

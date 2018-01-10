@@ -1,4 +1,4 @@
-//$(document).ready(function() {
+$(document).ready(function() {
   /* global moment */
 
   // medsContainer holds all of our meds
@@ -14,25 +14,43 @@
 
   // The code below handles the case where we want to get meds meds for a specific user
   // Looks for a query param in the url for user_id
+  // If we have this section in our url, we pull out the meds id from the url
+  // In '?meds_id=1', medsId is 1
   var url = window.location.search;
   var userId;
-  if (url.indexOf("?user_id=") !== -1) {
+
+  if (url.lastIndexOf("?user_id=") !== -1) {
     userId = url.split("=")[1];
     getMeds(userId);
   }
-  // If there's no userId we just get all meds as usual
-  else {
-    getMeds();
+
+  console.log("USER ID " + userId);
+ 
+
+  $(document).on("click", "#dashBtn", goToDashboard);
+  $(document).on("click", "#newMedBtn", goToNewMed);
+  $(document).on("click", "#todayBtn", goToToday);
+
+
+  function goToDashboard(){
+    window.location.href='/dashboard?user_id=' + userId; 
   }
 
+  function goToNewMed(){
+    window.location.href='/med-manager?user_id=' + userId; 
+  }
+
+  function goToToday(){
+    window.location.href='/today?user_id=' + userId; 
+  }
 
   // This function grabs meds from the database and updates the view
   function getMeds(user) {
     userId = user || "";
     if (userId) {
-      userId = "/?user_id=" + userId;
+      var link = "/?user_id=" + userId;
     }
-    $.get("/api/meds" + userId, function(data) {
+    $.get("/api/meds" + link, function(data) {
       meds = data;
       if (!meds || !meds.length) {
         displayEmpty(user);
@@ -50,7 +68,7 @@
       url: "/api/meds/" + id
     })
     .done(function() {
-      getMeds();
+      getMeds(userId);
     });
   }
 
@@ -66,7 +84,7 @@
 
   // This function constructs a meds's HTML
   function createNewRow(meds) {
-
+    console.log("meds: " + JSON.stringify(meds));
     var newMedsPanel = $("<div>");
     newMedsPanel.addClass("panel panel-default");
     var newMedsPanelHeading = $("<div>");
@@ -86,7 +104,7 @@
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
-    newMedsUser.text("Med for: " + meds.User.user_name);
+    newMedsUser.text("Med for: " + meds.User.username);
     newMedsUser.css({
       float: "right",
       color: "blue",
@@ -315,4 +333,4 @@
 	  }
 	};
 
-//});
+});
