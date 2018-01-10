@@ -121,7 +121,7 @@ app.route('/signup')
     })
     .post((req, res) => {
         db.User.create({
-        	name: req.body.username,
+        	  name: req.body.username,
             username: req.body.username,
             email: req.body.email,
             password: req.body.password
