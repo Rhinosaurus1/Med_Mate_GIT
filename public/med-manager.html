@@ -63,8 +63,13 @@
 						<label for="dose">Dose:</label>
 						<input placeholder="Dosage" type="text" class="form-control" id="dose">
 						<br />
-						<label for="frequency">Frequency: (Daily, Weekly, Monthly, etc.) </label>
-						<input placeholder="Frequency" type="text" class="form-control" id="frequency">
+						<label for="frequency">Select Frequency: </label>
+						<br />
+						<select type="select" class="form-control" id="frequency">
+							<option value="daily">Daily</option>
+							<option value="weekly">Weekly</option>
+							<option value="monthly">Monthly</option>
+						</select>
 						<br />
 						<label for="times">Times: (Integer) </label>
 						<input placeholder="Times" type="text" class="form-control" id="times">
@@ -86,7 +91,7 @@
 						</div>
 						<br />
 						-->
-						<button type="submit" class="btn btn-success submit">Submit</button>
+						<button type="submit" class="btn btn-success submit" href="/med-list?">Submit</button>
 					</div>
 				</form>
 			</div>

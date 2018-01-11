@@ -99,9 +99,17 @@ $(document).ready(function() {
       return medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) != null;
     };
 
-    //function validateDose(doseInput){
-      //return strengths.indexOf(doseInput.val()) > -1; 
-    //};  
+    function validateDose(doseInput){
+      return strengths.indexOf(doseInput.val()) > -1; 
+    };  
+
+    function validateDoseTimes(timesInput){
+      return Number.isInteger(timesInput);
+    };
+
+    function validatMedCount(countInput){
+      return Number.isInteger(countInput);
+    };
 
     // Constructing a newmeds object to hand to the database
     var startNew = new Date(startInput.val().trim());
