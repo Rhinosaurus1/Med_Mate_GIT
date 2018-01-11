@@ -63,14 +63,29 @@ module.exports = function(app) {
   });
 
   app.put("/api/meds", function(req, res) {
-    db.Meds.update(
-      req.body,
-      {
-        where: {
-          id: req.body.id
-        }
-      }).then(function(dbMeds) {
-        res.json(dbMeds);
-      });
+    console.log("req.body: " + JSON.stringify(req.body));
+    db.Events.destroy({
+      where: {
+        MedId: req.body.id
+      }
+    }).then(function(result){
+      db.Meds.update(
+        req.body.innerMed,
+        {
+          where: {
+            id: req.body.id
+          }
+        }).then(function(result) {
+          console.log("result ID: " + result.id);
+          //console.log("newMedID: " + newMedID);
+          for(var i = 0; i < req.body.events.length; i++){
+            req.body.events[i].MedId = req.body.id;
+          }
+          db.Events.bulkCreate(req.body.events).then(function(dbEvents){
+            res.json(dbEvents);
+          });
+        });
+    });
   });
+
 };

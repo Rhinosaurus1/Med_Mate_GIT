@@ -129,6 +129,7 @@ $(document).ready(function() {
 
 
     var newMed = {
+      id: "",
       innerMed: {
       med_name: nameInput
         .val()
@@ -266,7 +267,7 @@ $(document).ready(function() {
     })
     .done(function() {
       console.log("DONE")
-      ///window.location.href = "/med-list?user_id=" + userId;
+      window.location.href = "/med-list?user_id=" + userId;
     });
   }
 
