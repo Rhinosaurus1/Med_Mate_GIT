@@ -9,6 +9,7 @@ $(document).ready(function() {
   var countInput = $("#count");
   var remainingInput = $("#count");
   var strengths;
+
   //establish min date for datepicker
   var minDate = new Date();
   var currentMonth = minDate.getMonth()+1;
@@ -28,16 +29,12 @@ $(document).ready(function() {
       $('#dose')[0].autocomp.setListAndField(strengths, '');
   })
 
-
-
   var medManagerForm = $("#med-manager");
-  var userSelect = $("#user");
-
-
-
+  //var userSelect = $("#user");
 
   // Adding an event listener for when the form is submitted
   $(medManagerForm).on("submit", handleFormSubmit);
+  
   // Gets the part of the url that comes after the "?" (which we have if we're updating a meds)
   var url = window.location.search;
   var medsId;
@@ -80,31 +77,32 @@ $(document).ready(function() {
   // A function for handling what happens when the form to create a new meds is submitted
   function handleFormSubmit(event) {
     event.preventDefault();
-    console.log(strengths);
-    console.log(validateDose(doseInput));
-    // Wont submit the meds if we are missing a body, title, or user
+    //console.log(strengths);
+    //console.log(validateDose(doseInput));
+    // Wont submit the meds if we are missing specific form inputs
     if (!nameInput.val().trim() || 
         !doseInput.val().trim() || 
         !frequencyInput.val().trim() || 
         !timesInput.val().trim() ||
         !startInput.val().trim() || 
-      //  !instructionsInput.val().trim() || 
-        !countInput.val().trim() ||
-        !userSelect.val()) {
+        //!instructionsInput.val().trim() || 
+        !countInput.val().trim() //||
+        //!userSelect.val()
+        ) 
+        {
       return;
     }
+
     var isValidMed = validateMed(nameInput);
    
     function validateMed(medInput){
       return medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) != null;
     };
 
-    function validateDose(doseInput){
-      return strengths.indexOf(doseInput.val()) > -1; 
-    };  
+    //function validateDose(doseInput){
+      //return strengths.indexOf(doseInput.val()) > -1; 
+    //};  
 
-
-    
     // Constructing a newmeds object to hand to the database
     var startNew = new Date(startInput.val().trim());
     var startDate = startNew.getFullYear() + '-' + (startNew.getMonth()+1) + '-' + startNew.getDate();
@@ -178,7 +176,8 @@ $(document).ready(function() {
       remaining_count: countInput
         .val()
         .trim(),
-      UserId: userSelect.val()
+      //UserId: userSelect.val()
+      UserId: userId
     },
       events: eventArray
     };
@@ -231,12 +230,18 @@ $(document).ready(function() {
     $.get(queryUrl, function(data) {
       if (data) {
         console.log(data.UserId || data.id);
+        console.log("START DATE " + data.start_date);
+
+        var startNew = new Date(data.start_date);
+        console.log("START DATE New " + startNew);
+        var startDate =  ("0" + (startNew.getMonth()+1)).slice(-2) + '/' + ("0" + startNew.getDate()).slice(-2) + '/' + startNew.getFullYear();
+        console.log("START DATE New Full: " + startDate);
         // If this meds exists, prefill our med-manager forms with its data
         nameInput.val(data.med_name);  
         doseInput.val(data.med_dose);  
         frequencyInput.val(data.freq_main); 
         timesInput.val(data.freq_times);
-        startInput.val(data.start_date); 
+        startInput.val(startDate); 
         instructionsInput.val(data.instructions); 
         countInput.val(data.initial_count);
         userId = data.UserId || data.id;
@@ -247,28 +252,31 @@ $(document).ready(function() {
     });
   }
 
+  
   // A function to get users and then render our list of users
   function getUsers() {
     $.get("/api/users", renderUserList);
   }
   // Function to either render a list of users, or if there are none, direct the client to the page
   // to create a user first
+  
   function renderUserList(data) {
     if (!data.length) {
       window.location.href = "/users";
     }
     $(".hidden").removeClass("hidden");
-    var rowsToAdd = [];
-    for (var i = 0; i < data.length; i++) {
-      rowsToAdd.push(createUserRow(data[i]));
-    }
-    userSelect.empty();
-    console.log(rowsToAdd);
-    console.log(userSelect);
-    userSelect.append(rowsToAdd);
-    userSelect.val(userId);
+    //var rowsToAdd = [];
+    //for (var i = 0; i < data.length; i++) {
+      //rowsToAdd.push(createUserRow(data[i]));
+    //}
+    //userSelect.empty();
+    //console.log(rowsToAdd);
+    //console.log(userSelect);
+    //userSelect.append(rowsToAdd);
+    //userSelect.val(userId);
   }
 
+  /*
   // Creates the user options in the dropdown
   function createUserRow(user) {
     var listOption = $("<option>");
@@ -276,6 +284,7 @@ $(document).ready(function() {
     listOption.text(user.username);
     return listOption;
   }
+  */
 
   // Update a given meds, bring user to the blog page when done
   function updateMeds(meds) {
