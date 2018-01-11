@@ -24,6 +24,8 @@ module.exports = function(app) {
     console.log(req.body);
     db.User.create(req.body).then(function(dbUser) {
       res.json(dbUser);
+    }).catch(function(error){
+    	res.send(error);
     });
   });
 
