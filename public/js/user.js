@@ -42,7 +42,15 @@ $(document).ready(function() {
     console.log(userData);
     $.post("/api/users", userData, function(response){
       console.log(response);
-      window.location.href='/dashboard?user_id=' + response.id; 
+      if(response.errors){
+        console.log("Thar be errors here");
+        alert("I'm sorry, that username is already in use. Please choose another.")
+        window.location.href='/users';
+      }
+      if(!response.errors){
+        console.log("success");
+        window.location.href='/dashboard?user_id=' + response.id; 
+      }
     });
   }
 });
