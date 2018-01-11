@@ -8,7 +8,14 @@ $(document).ready(function() {
   var instructionsInput = $("#instructions");
   var countInput = $("#count");
   var remainingInput = $("#count");
+  var strengths;
+  //establish min date for datepicker
+  var minDate = new Date();
+  var currentMonth = minDate.getMonth()+1;
+  currentMonth = currentMonth > 9 ? currentMonth : ("0" + currentMonth);  
+  startInput[0].min = minDate.getFullYear() + '-' + currentMonth + '-' + minDate.getDate();
 
+  //set up lhc autocomplete
   new Def.Autocompleter.Prefetch('dose', []);
   new Def.Autocompleter.Search('name',
    'https://clin-table-search.lhc.nlm.nih.gov/api/rxterms/v3/search?maxList=25&ef=STRENGTHS_AND_FORMS');
@@ -16,8 +23,7 @@ $(document).ready(function() {
     var drugField = $('#name')[0];
     var drugFieldVal = drugField.value;
     var autocomp = drugField.autocomp;
-    var strengths =
-      autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
+    strengths = autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
     if (strengths)
       $('#dose')[0].autocomp.setListAndField(strengths, '');
   })
@@ -74,17 +80,31 @@ $(document).ready(function() {
   // A function for handling what happens when the form to create a new meds is submitted
   function handleFormSubmit(event) {
     event.preventDefault();
+    console.log(strengths);
+    console.log(validateDose(doseInput));
     // Wont submit the meds if we are missing a body, title, or user
     if (!nameInput.val().trim() || 
         !doseInput.val().trim() || 
         !frequencyInput.val().trim() || 
         !timesInput.val().trim() ||
         !startInput.val().trim() || 
-        !instructionsInput.val().trim() || 
+      //  !instructionsInput.val().trim() || 
         !countInput.val().trim() ||
         !userSelect.val()) {
       return;
     }
+    var isValidMed = validateMed(nameInput);
+   
+    function validateMed(medInput){
+      return medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) != null;
+    };
+
+    function validateDose(doseInput){
+      return strengths.indexOf(doseInput.val()) > -1; 
+    };  
+
+
+    
     // Constructing a newmeds object to hand to the database
     var startNew = new Date(startInput.val().trim());
     var startDate = startNew.getFullYear() + '-' + (startNew.getMonth()+1) + '-' + startNew.getDate();
