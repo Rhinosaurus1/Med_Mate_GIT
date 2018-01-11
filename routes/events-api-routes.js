@@ -95,49 +95,80 @@ module.exports = function(app) {
           //res.json(dbEvents);
           //console.log("DB EVENTS: " + JSON.stringify(dbEvents));
           //console.log(JSON.stringify(dbEvents[0]));
-        
+          
           var emailAddress = "";
+          var emailAddressArray = [];
+
 
           //if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
           if (typeof dbEvents == 'undefined' || dbEvents.length == 0){
             return;
           }
+          //else{
+            //emailAddress = dbEvents[0].Med.User.email;
+            //console.log("dbEvents Email: " + dbEvents[0].Med.User.email);
+          //}
           else{
-            emailAddress = dbEvents[0].Med.User.email_address;
-            console.log("dbEvents Email: " + dbEvents[0].Med.User.email_address);
+          	for(var j=0; j < dbEvents.length; j++){
+          		//console.log("DB EVENTS EMAIL J: " + j + "   " + dbEvents[j].Med.User.email);
+          		if(emailAddressArray.indexOf(dbEvents[j].Med.User.email) == -1){
+          			emailAddressArray.push(dbEvents[j].Med.User.email);
+          		}
+          	}
+          }
+          console.log("EMAIL ADDRESS ARRAY: " + emailAddressArray);
+
+          var emailEventsArray = [];
+
+          for(var v=0; v < emailAddressArray.length; v++){
+	          	var tempArray = [];
+	          	var currentEmail = emailAddressArray[v];
+
+	          	for (var k=0; k < dbEvents.length; k++){
+	          		if(dbEvents[k].Med.User.email === currentEmail){
+	          			tempArray.push(dbEvents[k]);
+	          		}
+	          	}
+
+	            var eventsText = "";
+
+	            for(var i=0; i<tempArray.length; i++){
+	                var eventItem = ("<p>Name:   <b>" + tempArray[i].Med.med_name + "</b>   Take Time:   <b>" + tempArray[i].event_time +  "</b>   Taken Already?:   <b>"  +  tempArray[i].taken_status + "</b></p>");
+	                eventsText = eventsText + eventItem;
+	            }
+	            var name = tempArray[0].Med.User.name;
+	            sendEmails(name, currentEmail, eventsText);
+  	
           }
 
-          var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            auth: {
-                user: 'billstopay109@gmail.com',
-                pass: 'blake150'
-            }
-          });
+          function sendEmails(name, email, emailData){
 
-          var eventsText = "";
+	          var transporter = nodemailer.createTransport({
+	            host: 'smtp.gmail.com',
+	            port: 587,
+	            auth: {
+	                user: 'med.mate.medreminders@gmail.com',
+	                pass: 'passwurd'
+	            }
+	          });
 
-          for(var i=0; i<dbEvents.length; i++){
-              var eventItem = ("<p>Name:   <b>" + dbEvents[i].Med.med_name + "</b>   Take Time:   <b>" + dbEvents[i].event_time +  "</b>   Taken Already?:   <b>"  +  dbEvents[i].taken_status + "</b></p>");
-              eventsText = eventsText + eventItem;
-          }
+	          //set up email to send, to , from, subject, text
+	          var mailOptions = {
+	            from: 'med.mate.medreminders@gmail.com',
+	            to: email,
+	            subject: "Medications to take today",
+	            text: "Medications to take today",
+	            html: "<p><b>HELLO " + name + "! THE FOLLOWING MEDICATIONS ARE TO BE TAKEN TODAY </b></p>"  + emailData
+	          };
 
-          //set up email to send, to , from, subject, text
-          var mailOptions = {
-            from: 'billstopay109@gmail.com',
-            to: emailAddress,
-            subject: "Medications to take today",
-            text: "Medications to take today",
-            html: "<p><b>THE FOLLOWING MEDICATIONS ARE TO BE TAKEN TODAY </b></p>"  + eventsText
-          };
+	          //send email, log error if any, return "sent" if no error
+	          transporter.sendMail(mailOptions, (error, info) => {
+	              if (error) {
+	                  return console.log(error);
+	              }
+	          });
+	      }
 
-          //send email, log error if any, return "sent" if no error
-          transporter.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                  return console.log(error);
-              }
-          });
         });
   };
 
@@ -205,8 +236,8 @@ module.exports = function(app) {
         host: 'smtp.gmail.com',
         port: 587,
         auth: {
-            user: 'billstopay109@gmail.com',
-            pass: 'blake150'
+            user: 'med.mate.medreminders@gmail.com',
+            pass: 'passwurd'
         }
       });
 
@@ -220,7 +251,7 @@ module.exports = function(app) {
 
       //set up email to send, to , from, subject, text
       var mailOptions = {
-        from: 'billstopay109@gmail.com',
+        from: 'med.mate.medreminders@gmail.com',
         to: emailAddress,
         subject: "Medications to take today",
         text: "Medications to take today",
