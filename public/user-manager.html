@@ -6,10 +6,11 @@
 	<title>Manage_Users</title>
 	<!-- Latest compiled and minified CSS & JS -->
 	<link rel="shortcut icon" href="images/pill.ico">
-	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/styles.css" media="screen" title="no title">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/login.css" media="screen" title="no title">
 	<script src="https://code.jquery.com/jquery.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -17,13 +18,31 @@
 	<div class="row top-30">
     </div>
 		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
+			<div class="col-md-12 col-md-offset-2">
 				<div class="user-container">
 					<h1>User Sign-Up</h1>
-					<table class="table table-striped">
-						<tbody>
-							<tr id="form-row">
 								<form id="user-form">
+									<div class="form-group">
+										<label for="user-name">Name:</label>
+										<input placeholder="Enter your name" id="user-name" type="text" class="form-control user-input"/>
+									</div>
+									<div class="form-group">
+										<label for="login-name">Username:</label>
+										<input placeholder="Pick a username" id="login-name" type="text" class="form-control user-input"/>
+									</div>
+									<div class="form-group">
+										<label for="password">Password:</label>
+										<input placeholder="Enter your password" id="password" type="password" class="form-control user-input"/>
+									</div>
+									<div class="form-group">
+										<label for="email">Email:</label>
+										<input placeholder="yourEmail@example.com" id="email" type="email" class="form-control user-input"/>
+									</div>
+									<button type="submit" class="btn btn-success">Login</button>
+									<br>
+									<small id="redirect" class="form-text text-muted">Already a member? Sign in <a href="/login">Here</a></small>
+								</form>
+							<!--	<form id="user-form">
 									<td colspan="2">
 										<input placeholder="Enter a name" id="user-name" type="text" class="user-input" />
 									</td>
@@ -38,10 +57,7 @@
 									</td>
 									<td><button type="submit" class="btn btn-success">Create User</button>
 									</td>
-								</form>
-							</tr>
-						</tbody>
-					</table>
+								</form>-->
 				</div>
 			</div>
 		</div>

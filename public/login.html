@@ -6,29 +6,34 @@
 	<title>Manage_Users</title>
 	<!-- Latest compiled and minified CSS & JS -->
 	<link rel="shortcut icon" href="images/pill.ico">
-	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/styles.css" media="screen" title="no title">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/login.css" media="screen" title="no title">
+	<link href="https://fonts.googleapis.com/css?family=Inknut+Antiqua:600|Raleway:500" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 </head>
 
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
+			<div class="col-md-12 col-md-offset-2">
+					<h1 id="heading"><img id="logoHome" src="images/redcheck.png" alt="" height="200" width="150"/>MedMate</h1> 
 				<div class="user-container">
 					<h1>User Login</h1>
-					<div id="form-row">
 						<form id="user-form">
-							<label for="login-name">Login Name:</label>
-								<input placeholder="Enter your login name" id="login-name" name="username" type="text" class="user-input"/>
-							<br />
+							<div class="form-group">
+							<label for="login-name">Username:</label>
+								<input placeholder="Enter your username" id="login-name" name="username" type="text" class="form-control user-input"/>
+							</div>
+							<div class="form-group">
 							<label for="login-name">Password:</label>
-								<input placeholder="Enter your password" id="password" name="password" type="password" class="user-input"/>
-							<br />
+								<input placeholder="Enter your password" id="password" name="password" type="password" class="form-control user-input"/>
+							</div>
 							<button type="submit" class="btn btn-success" value="Log In">Login</button>
+							<br>
+							<small id="redirect" class="form-text text-muted">Not a member? Sign up <a href="/signup">Here</a></small>
 						</form>
-					</div>
 				</div>
 			</div>
 		</div>
