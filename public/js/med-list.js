@@ -1,4 +1,4 @@
-$(document).ready(function() {
+//$(document).ready(function() {
   /* global moment */
 
   // medsContainer holds all of our meds
@@ -333,4 +333,4 @@ $(document).ready(function() {
 	  }
 	};
 
-});
+//});
