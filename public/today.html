@@ -29,6 +29,21 @@
       <div class="col-md-2 col-sm-2">
         <a class="btn btn-danger" href="/logout">Log Out</a>
       </div>
+      <div class="col-md-4 col-sm-4">
+        <!--Google Search Bar Form-->
+        <form method="get" action="http://www.google.com/search" target="_blank">
+          <div>
+          <h4 align="left">Search for a local pharmacy</h4>
+          <table id="google" border="0" align="left" cellpadding="0">
+                    
+          <input type="text"   name="q" size="30" style="color:#808080;"
+          maxlength="255" value="Google"
+          onfocus="if(this.value==this.defaultValue)this.value=''; this.style.color='black';" onblur="if(this.value=='')this.value=this.defaultValue; "/>         
+          
+          </table>
+          </div>
+        </form> 
+      </div>
     </div>
 
     
@@ -79,6 +94,11 @@
   <div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
+        <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+          <h5 class="modal-title" id="modalLabel">Dose Tracker For:</h5>
+            </div>
         <div class="modal-body" id="chartBody">
         </div>
         <div class="modal-footer">

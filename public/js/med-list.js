@@ -1,4 +1,4 @@
-$(document).ready(function() {
+//$(document).ready(function() {
   /* global moment */
 
   // medsContainer holds all of our meds
@@ -210,8 +210,8 @@ $(document).ready(function() {
             cutoutPercentage: 50,
             title: {
               display: true,
-              fontSize: 40,
-              text: 'Dose Tracker for ' + medName
+              fontSize: 30,
+              text: medName
             }
         }
 
@@ -333,4 +333,4 @@ $(document).ready(function() {
 	  }
 	};
 
-});
+//});
