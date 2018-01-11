@@ -48,7 +48,7 @@ button.edit, button.pic, button.chart, button.taken {
 }
 
 *#myChart {
-  margin-top: 15px;
+  margin-top: 2px;
 }
 
 * {box-sizing:border-box}
