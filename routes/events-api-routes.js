@@ -147,14 +147,14 @@ module.exports = function(app) {
 	            host: 'smtp.gmail.com',
 	            port: 587,
 	            auth: {
-	                user: 'billstopay109@gmail.com',
-	                pass: 'blake150'
+	                user: 'med.mate.medreminders@gmail.com',
+	                pass: 'passwurd'
 	            }
 	          });
 
 	          //set up email to send, to , from, subject, text
 	          var mailOptions = {
-	            from: 'billstopay109@gmail.com',
+	            from: 'med.mate.medreminders@gmail.com',
 	            to: email,
 	            subject: "Medications to take today",
 	            text: "Medications to take today",
