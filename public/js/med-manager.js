@@ -9,12 +9,19 @@ $(document).ready(function() {
   var countInput = $("#count");
   var remainingInput = $("#count");
   var strengths;
+  // Adding an event listener for when the form is submitted
+  var medManagerForm = $("#med-manager");
+  //var userSelect = $("#user");
+  $(medManagerForm).on("submit", handleFormSubmit);
 
   //establish min date for datepicker
   var minDate = new Date();
   var currentMonth = minDate.getMonth()+1;
   currentMonth = currentMonth > 9 ? currentMonth : ("0" + currentMonth);  
   startInput[0].min = minDate.getFullYear() + '-' + currentMonth + '-' + minDate.getDate();
+
+  var dateControl = document.querySelector('input[type="date"]');
+  dateControl.value = minDate.getFullYear() + '-' + currentMonth + '-' + minDate.getDate();
 
   //set up lhc autocomplete
   new Def.Autocompleter.Prefetch('dose', []);
@@ -27,14 +34,8 @@ $(document).ready(function() {
     strengths = autocomp.getItemExtraData(drugFieldVal)['STRENGTHS_AND_FORMS'];
     if (strengths)
       $('#dose')[0].autocomp.setListAndField(strengths, '');
-  })
+  });
 
-  var medManagerForm = $("#med-manager");
-  //var userSelect = $("#user");
-
-  // Adding an event listener for when the form is submitted
-  $(medManagerForm).on("submit", handleFormSubmit);
-  
   // Gets the part of the url that comes after the "?" (which we have if we're updating a meds)
   var url = window.location.search;
   var medsId;
@@ -53,6 +54,8 @@ $(document).ready(function() {
   else if (url.indexOf("?user_id=") !== -1) {
     userId = url.split("=")[1];
   }
+
+
 
   $(document).on("click", "#dashBtn", goToDashboard);
   $(document).on("click", "#medListBtn", goToMedList);
@@ -249,7 +252,17 @@ $(document).ready(function() {
         doseInput.val(data.med_dose);  
         frequencyInput.val(data.freq_main); 
         timesInput.val(data.freq_times);
-        startInput.val(startDate); 
+
+         //establish min date for datepicker
+        var minDate = new Date(startDate);
+        var currentMonth = minDate.getMonth()+1;
+        currentMonth = currentMonth > 9 ? currentMonth : ("0" + currentMonth);  
+        startInput[0].min = minDate.getFullYear() + '-' + currentMonth + '-' + minDate.getDate();
+
+        var dateControl = document.querySelector('input[type="date"]');
+        dateControl.value = minDate.getFullYear() + '-' + currentMonth + '-' + minDate.getDate();
+
+        //startInput.val(startDate); 
         instructionsInput.val(data.instructions); 
         countInput.val(data.initial_count);
         userId = data.UserId || data.id;
