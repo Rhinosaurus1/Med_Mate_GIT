@@ -50,6 +50,7 @@ nav {
 
 .side-panel{
     background-color: rgba(19, 91, 163, 0.9);
+    height: 150vmax !important;
 }
 
 #sideLeft {
