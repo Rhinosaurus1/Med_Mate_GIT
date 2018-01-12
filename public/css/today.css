@@ -54,11 +54,11 @@ nav {
 }
 
 #sideLeft {
-    border-right: 3px solid #BF901D !important;
+    /*border-right: 3px solid #BF901D !important;*/
 }
 
 #sideRight {
-    border-left: 3px solid #BF901D !important;
+    /*border-left: 3px solid #BF901D !important;*/
 }
 
 .main-content{
