@@ -83,6 +83,9 @@ $(document).ready(function() {
     userContainer.append(alertDiv);
   }
 
+  //function confirmAccountDelete(){
+    //$("#deleteAccount").modal("toggle");
+  //}
   // Function for handling what happens when the delete button is pressed
   function handleDeleteButtonPress() {
     var listItemData = $(this).parent("td").parent("tr").data("user");
@@ -93,6 +96,9 @@ $(document).ready(function() {
       method: "DELETE",
       url: "/api/users/" + id
     })
-    .done(getUsers);
+    .done();
+    //.done(function() {
+     // window.location.href='/';
+    //});
   }
 });
