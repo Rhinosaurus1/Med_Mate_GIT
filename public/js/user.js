@@ -49,7 +49,7 @@ $(document).ready(function() {
       }
       if(!response.errors){
         console.log("success");
-        window.location.href='/dashboard?user_id=' + response.id; 
+        window.location.href='/today?user_id=' + response.id; 
       }
     });
   }

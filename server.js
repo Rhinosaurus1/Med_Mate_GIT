@@ -103,7 +103,7 @@ app.use((req, res, next) => {
 // middleware function to check for logged-in users
 var sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies.user_sid) {
-        res.redirect('/dashboard');
+        res.redirect('/today');
     } else {
         next();
     }    
@@ -128,7 +128,7 @@ app.route('/signup')
         })
         .then(user => {
             req.session.user = user.dataValues;
-            res.redirect('/dashboard');
+            res.redirect('/today');
         })
         .catch(error => {
             res.redirect('/signup');
@@ -165,9 +165,9 @@ app.route('/login')
 
 
 // route for user's dashboard
-app.get('/dashboard', (req, res) => {
+app.get('/today', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
-        res.sendFile(__dirname + '/public/dashboard.html');
+        res.sendFile(__dirname + '/public/today.html');
     } else {
         res.redirect('/login');
     }

@@ -53,24 +53,9 @@ $(document).ready(function() {
               console.log("USER DATA" + JSON.stringify(userData));
               console.log("RESPONSE: " + response.status);
               console.log("RESPONSE: " + response.userid);
-              window.location.href='/dashboard?user_id=' + response.userid; 
+              window.location.href='/today?user_id=' + response.userid; 
           }
     });
   }
-  
-  /*
-  function verifyUser(userData) {
-    console.log(userData);
-    $.ajax({
-      method: "POST",
-      url: '/login',
-      data: userData,
-      success: function(response){
-        console.log(response);
-        alert('That is not a valid username');
-      }
-    });    
-  }
-  */
   
 });

@@ -150,14 +150,10 @@
   // This function displays a messgae when there are no meds
   function displayEmpty(id) {
     var query = window.location.search;
-    var partial = "";
-    if (id) {
-      partial = " for User #" + id;
-    }
     medsContainer.empty();
     var messageh2 = $("<h2>");
     messageh2.css({ "text-align": "center", "margin-top": "50px" });
-    messageh2.html("No meds yet" + partial + ", navigate <a href='/med-manager" + query +
+    messageh2.html("No meds yet.  Please navigate <a href='/med-manager" + query +
     "'>here</a> in order to get started.");
     medsContainer.append(messageh2);
   }
