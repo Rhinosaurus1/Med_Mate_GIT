@@ -23,15 +23,79 @@
     margin-bottom: 33px;
 }
 
-#navbar{
-    padding-left:10px;
-    background-color: black;
+nav { 
+    background-color: #5DC8D9 !important;
+    position: sticky;
+    font-family: 'Raleway', sans-serif;
+    border-bottom: 3px solid #BF901D;
 }
+
 
 #newMedBtn, #medListBtn, #dashBtn, #logout{
     color: #FFF;
 }
 
 .active{
-    color: grey !important;
+    color: rgb(109, 109, 109) !important;
+}
+
+#mmLogo{
+    height: 38px !important;
+    width: 20%;
+}
+
+#navLogo{
+    margin-right: -190px;
+}
+
+.side-panel{
+    background-color: rgba(19, 91, 163, 0.9);
+    height: 100vh;
+}
+
+#sideLeft {
+    /*border-right: 3px solid #BF901D !important;*/
+}
+
+#sideRight {
+    /*border-left: 3px solid #BF901D !important;*/
+}
+
+.main-content{
+    font-family: 'Raleway', sans-serif;
+}
+.meds-container {
+    padding: 15px;
+}
+
+.main-panel{
+    background-color:rgba(255, 255, 249, 0.426);
+}
+
+.card{
+    width: 80%;
+    margin: auto;
+    margin-top: 25px;
+    background-color:rgba(255, 255, 249, 0.426);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+}
+button {
+    margin-right: 16px; 
+}
+#todays{
+    text-align: center;
+    font-weight: bolder;
+    padding-bottom: 25px;
+    font-size: 60px;
+    margin-top: -100px;
+    color:rgba(0, 0, 0, 0.707);
+}
+#emailForm{
+    width:22%;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+#emailbtn {
+    margin: 5px;
 }
