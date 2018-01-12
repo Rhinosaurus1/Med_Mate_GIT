@@ -144,8 +144,9 @@
     
     newMedsWrapper.append(newMedsPanelHeading);
     newMedsWrapper.append(newMedsPanelBody);
+    newMedsWrapper.data("meds", meds);
     newMedsPanel.append(newMedsWrapper);
-    newMedsPanel.data("meds", meds);
+    //newMedsPanel.data("meds", meds);
     return newMedsPanel;
   }
 
