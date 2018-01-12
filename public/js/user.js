@@ -44,8 +44,9 @@ $(document).ready(function() {
       console.log(response);
       if(response.errors){
         console.log("Thar be errors here");
-        alert("I'm sorry, that username is already in use. Please choose another.")
-        window.location.href='/users';
+        $("#usernameModal").modal("toggle");
+        //alert("I'm sorry, that username is already in use. Please choose another.")
+        //window.location.href='/users';
       }
       if(!response.errors){
         console.log("success");
@@ -53,4 +54,13 @@ $(document).ready(function() {
       }
     });
   }
+
+  //Code for the usernameModal modal
+  function usernameModal(){
+    window.location.href = "/users";
+  };
+
+  $(document).on("click", "#usermodBtn", usernameModal);
+
+
 });
