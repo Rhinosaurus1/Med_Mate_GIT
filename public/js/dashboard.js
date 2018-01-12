@@ -83,22 +83,22 @@ $(document).ready(function() {
     userContainer.append(alertDiv);
   }
 
-  //function confirmAccountDelete(){
-    //$("#deleteAccount").modal("toggle");
-  //}
+
   // Function for handling what happens when the delete button is pressed
   function handleDeleteButtonPress() {
     var listItemData = $(this).parent("td").parent("tr").data("user");
     console.log("listItemData: " + listItemData);
     var id = listItemData.id;
     console.log("listItemData.id: " + id);
-    $.ajax({
-      method: "DELETE",
-      url: "/api/users/" + id
-    })
-    .done();
-    //.done(function() {
-     // window.location.href='/';
-    //});
+    $("#deleteAccount").modal("toggle");
+    $("#delete").on("click", function(){
+	      $.ajax({
+	      method: "DELETE",
+	      url: "/api/users/" + id
+	    })
+    	.done(function() {
+    		window.location.href='/';
+    	});
+    });
   }
 });
