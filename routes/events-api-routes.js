@@ -92,25 +92,16 @@ module.exports = function(app) {
           ],
           order: ['event_time']
         }).then(function(dbEvents) {
-          //res.json(dbEvents);
-          //console.log("DB EVENTS: " + JSON.stringify(dbEvents));
-          //console.log(JSON.stringify(dbEvents[0]));
           
           var emailAddress = "";
           var emailAddressArray = [];
 
-
-          //if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
           if (typeof dbEvents == 'undefined' || dbEvents.length == 0){
             return;
           }
-          //else{
-            //emailAddress = dbEvents[0].Med.User.email;
-            //console.log("dbEvents Email: " + dbEvents[0].Med.User.email);
-          //}
+
           else{
           	for(var j=0; j < dbEvents.length; j++){
-          		//console.log("DB EVENTS EMAIL J: " + j + "   " + dbEvents[j].Med.User.email);
           		if(emailAddressArray.indexOf(dbEvents[j].Med.User.email) == -1){
           			emailAddressArray.push(dbEvents[j].Med.User.email);
           		}
@@ -133,8 +124,14 @@ module.exports = function(app) {
 	            var eventsText = "";
 
 	            for(var i=0; i<tempArray.length; i++){
-	                var eventItem = ("<p>Name:   <b>" + tempArray[i].Med.med_name + "</b>   Take Time:   <b>" + tempArray[i].event_time +  "</b>   Taken Already?:   <b>"  +  tempArray[i].taken_status + "</b></p>");
-	                eventsText = eventsText + eventItem;
+	            	var yesno = "YES";
+	            	console.log("Taken STATUS: " + tempArray[i].taken_status);
+					if(tempArray[i].taken_status === false ) {
+					    yesno = "NO";
+					}
+	            	var dateTime = getFormattedDateTime(tempArray[i].event_time);
+	            	var eventItem = ("<p>Name:   <b>" + tempArray[i].Med.med_name + "</b>   Take Time:   <b>" + dateTime + "</b>   Taken Already?:   <b>"  +  yesno + "</b></p>");
+	            	eventsText = eventsText + eventItem;
 	            }
 	            var name = tempArray[0].Med.User.name;
 	            sendEmails(name, currentEmail, eventsText);
@@ -147,14 +144,14 @@ module.exports = function(app) {
 	            host: 'smtp.gmail.com',
 	            port: 587,
 	            auth: {
-	                user: 'med.mate.medreminders@gmail.com',
-	                pass: 'passwurd'
+	                user: 'billstopay109@gmail.com',
+	                pass: 'blake150'
 	            }
 	          });
 
 	          //set up email to send, to , from, subject, text
 	          var mailOptions = {
-	            from: 'med.mate.medreminders@gmail.com',
+	            from: 'billstopay109@gmail.com',
 	            to: email,
 	            subject: "Medications to take today",
 	            text: "Medications to take today",
@@ -198,8 +195,8 @@ module.exports = function(app) {
 
 
 
-  //email route
-  
+  //email route for testing
+  /*
   app.get("/api/events/send/:email", function(req,res){
     //set email address as entered email
     var emailAddress = req.params.email;
@@ -245,7 +242,8 @@ module.exports = function(app) {
 
       //loop through events due and html-ify for email, adding to total text
       for(var i=0; i<eventsObj.eventsDB.length; i++){
-        var eventItem = ("<p>Name:   <b>" + eventsObj.eventsDB[i].Med.med_name + "</b>   Take Time:   <b>" + eventsObj.eventsDB[i].event_time +  "</b>   Taken Already?:   <b>"  +  eventsObj.eventsDB[i].taken_status + "</b></p>");
+      	var dateTime = getFormattedDateTime(eventsObj.eventsDB[i].event_time);
+        var eventItem = ("<p>Name:   <b>" + eventsObj.eventsDB[i].Med.med_name + "</b>   Take Time:   <b>" + dateTime +  "</b>   Taken Already?:   <b>"  +  eventsObj.eventsDB[i].taken_status + "</b></p>");
         eventsText = eventsText + eventItem;
       };
 
@@ -267,7 +265,30 @@ module.exports = function(app) {
       res.send("sent");
     });
   });
-  
+  */
+
+  function getFormattedDateTime(data){
+    var tempDate = data;
+	var months = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
+	var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+	var newTempDate = tempDate.getDate()  + " " + tempDate.getFullYear();
+	var newDay = days[tempDate.getDay()];
+	var newMonth = months[tempDate.getMonth()];
+	var newDateString = newDay + " " + newMonth + " " + newTempDate;
+	var hr = tempDate.getHours() + 5;
+	var min = tempDate.getMinutes();
+	if (min < 10) {
+	    min = "0" + min;
+	}
+	var ampm = "AM";
+	if( hr > 12 ) {
+	    hr -= 12;
+	    ampm = "PM";
+	}
+	var newTimeString = hr + ":" + min + " " + ampm;
+	var newDateTimeString = newDateString + " at " + newTimeString;
+	return newDateTimeString;
+  }
 
 
 };
