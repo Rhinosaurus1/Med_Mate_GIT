@@ -9,6 +9,8 @@ $(document).ready(function() {
   var countInput = $("#count");
   var remainingInput = $("#count");
   var strengths;
+  var initialMedName = null;
+  var initialMedDose = null;
   // Adding an event listener for when the form is submitted
   var medManagerForm = $("#med-manager");
   //var userSelect = $("#user");
@@ -187,6 +189,10 @@ $(document).ready(function() {
         frequencyInput.val(data.freq_main); 
         timesInput.val(data.freq_times);
 
+        // set initial values for name and dose for editting med submissions without using autocomp
+        initialMedName = data.med_name;
+        initialMedDose = data.med_dose;
+
         //establish min date for datepicker
         var minDate = new Date(startDate);
         var currentMonth = minDate.getMonth()+1;
@@ -264,31 +270,49 @@ $(document).ready(function() {
         validationResult.isValid = false;
         validationResult.message = "You must enter a med.";
       }
-      if(validationResult.isValid && medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) == null){
+      if(validationResult.isValid
+         && !isStableEdit(doseInput.val().trim(), medInput.val().trim()) 
+         && medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) == null){
         validationResult.isValid = false;
         validationResult.message = "You must enter a valid med.";        
       }
       return validationResult;
     },
 
-    validateDose:function(doseInput){
+    validateDose:function(doseInput, medInput){
       var validationResult = { isValid: true, message:""};
       if(!doseInput.val().trim()){
         validationResult.isValid = false;
-        validationResult.message = "You must enter a dosage.";
+        validationResult.message = "Please enter a dosage.";
+      }
+      if(validationResult.isValid 
+          && !isStableEdit(doseInput.val().trim(), medInput.val().trim()) 
+          && !(strengths.indexOf(doseInput.val()) > -1)){
+        validationResult.isValid = false;
+        validationResult.message = "Please enter a valid dosage.";  
       }
       return validationResult;
     },
 
     validateFrequency:function(frequencyInput){
       var validationResult = { isValid: true, message:""};
-
+      if(!frequencyInput.val().trim()){
+        validationResult.isValid = false;
+        validationResult.message = "Please enter a frequency.";
+      } 
       return validationResult;
     },
 
     validateTimes:function(timesInput){
       var validationResult = { isValid: true, message:""};
-
+      if(!timesInput.val().trim()){
+        validationResult.isValid = false;
+        validationResult.message = "Please enter a time.";
+      }
+      if(validationResult.isValid && !Number.isInteger(parseInt(timesInput.val().trim()))){
+        validationResult.isValid = false;
+        validationResult.message = "Please enter a valid number.";
+      }
       return validationResult;
     },
 
@@ -300,8 +324,14 @@ $(document).ready(function() {
 
     validateCount:function(countInput){
       var validationResult = { isValid: true, message:""};
-
-
+      if(!countInput.val().trim()){
+        validationResult.isValid = false;
+        validationResult.message = "Please enter a med count.";
+      }
+      if(validationResult.isValid && !Number.isInteger(parseInt(countInput.val().trim()))){
+        validationResult.isValid = false;
+        validationResult.message = "Please enter a valid number.";
+      }
       return validationResult;
     }
 
@@ -310,7 +340,7 @@ $(document).ready(function() {
   function validateForm(){
     var validationFormResult = {};
     validationFormResult.medInputResult = validator.validateMed(nameInput);
-    validationFormResult.doseInputResult = validator.validateDose(doseInput);
+    validationFormResult.doseInputResult = validator.validateDose(doseInput, nameInput);
     validationFormResult.frequencyInputResult = validator.validateFrequency(frequencyInput);
     validationFormResult.timesInputResult = validator.validateTimes(timesInput);
     validationFormResult.startInputResult = validator.validateStart(startInput);
@@ -330,30 +360,6 @@ $(document).ready(function() {
     return formIsValid;
   }
 
-  function oldValidateForm(){
-    if ( 
-        !frequencyInput.val().trim() || 
-        !timesInput.val().trim() ||
-        !startInput.val().trim() || 
-        //!instructionsInput.val().trim() || 
-        !countInput.val().trim()
-        /*|| !userSelect.val()*/){
-      return false;
-    }    
-
-    function validateDose(doseInput){
-      return strengths.indexOf(doseInput.val()) > -1; 
-    };  
-
-    function validateDoseTimes(timesInput){
-      return Number.isInteger(timesInput);
-    };
-
-    function validatMedCount(countInput){
-      return Number.isInteger(countInput);
-    };
-  }
-
   // clears out all the error messages currently visibile on the form
   function resetFormValidation(){
     $("#nameInputValidation").hide();
@@ -362,6 +368,13 @@ $(document).ready(function() {
     $("#timesInputValidation").hide();
     $("#startInputValidation").hide();
     $("#countInputValidation").hide();
+  }
+
+  function isStableEdit(currentMedDoseValue, currentMedNameValue){
+    if(initialMedDose == currentMedDoseValue && initialMedName === currentMedNameValue){ 
+      return true;
+    }
+    return false;
   }
 
   // will update the validation messages and show the correct ones
