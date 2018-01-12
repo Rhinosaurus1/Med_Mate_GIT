@@ -101,46 +101,50 @@
     console.log(meds);
 
     var newMedsPanel = $("<div>");
-    newMedsPanel.addClass("panel panel-default");
+    newMedsPanel.addClass("card");
+    var newMedsWrapper = $("<div>");
+    newMedsWrapper.addClass("card-body");
     var newMedsPanelHeading = $("<div>");
-    newMedsPanelHeading.addClass("panel-heading");
+    newMedsPanelHeading.addClass("card-title");
     var picBtn = $("<button>");
     picBtn.text("View Picture(s)");
-    picBtn.addClass("pic btn btn-success");
+    picBtn.addClass("pic btn btn-outline-secondary");
     var takenBtn = $("<button>");
     takenBtn.text("Confirm Pill Taken");
-    takenBtn.addClass("taken btn btn-warning");
+    takenBtn.addClass("taken btn btn-outline-secondary");
     var chartBtn = $("<button>");
     chartBtn.text("View Chart");
-    chartBtn.addClass("chart btn btn-primary");
+    chartBtn.addClass("chart btn btn-outline-secondary");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
     newMedsUser.text("Med time: " + moment(meds.event_time).add(5, 'hours').format('MMMM Do YYYY, h:mm:ss a'));
     newMedsUser.css({
       float: "right",
-      color: "blue",
+      color: "red",
       "margin-top":
       "-10px"
     });
     var newMedsPanelBody = $("<div>");
-    newMedsPanelBody.addClass("panel-body");
+    newMedsPanelBody.addClass("card-text");
     var newMedsBody = $("<p>");
     newMedsTitle.text(meds.Med.med_name + "  -  " + meds.Med.med_dose);
     newMedsBody.text(meds.Med.instructions + " - " + meds.Med.freq_times + " times  -  " + meds.Med.freq_main);
-    newMedsPanelHeading.append(picBtn);
-    newMedsPanelHeading.append(chartBtn);
+    newMedsPanelBody.append(newMedsBody);
+    newMedsPanelBody.append(picBtn);
+    newMedsPanelBody.append(chartBtn);
     if(meds.taken_status == false){
-      newMedsPanelHeading.append(takenBtn);
+      newMedsPanelBody.append(takenBtn);
     }
     else if(meds.taken_status == true){
-      newMedsPanelHeading.append("<h3>Pill already taken</h3>");
+      newMedsPanelBody.append("<h3>Pill already taken</h3>");
     }
     newMedsPanelHeading.append(newMedsTitle);
     newMedsPanelHeading.append(newMedsUser);
-    newMedsPanelBody.append(newMedsBody);
-    newMedsPanel.append(newMedsPanelHeading);
-    newMedsPanel.append(newMedsPanelBody);
+    
+    newMedsWrapper.append(newMedsPanelHeading);
+    newMedsWrapper.append(newMedsPanelBody);
+    newMedsPanel.append(newMedsWrapper);
     newMedsPanel.data("meds", meds);
     return newMedsPanel;
   }
