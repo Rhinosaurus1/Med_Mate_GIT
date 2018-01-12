@@ -55,12 +55,9 @@ $(document).ready(function() {
     userId = url.split("=")[1];
   }
 
-
-
   $(document).on("click", "#dashBtn", goToDashboard);
   $(document).on("click", "#medListBtn", goToMedList);
   $(document).on("click", "#todayBtn", goToToday);
-
 
   function goToDashboard(){
     window.location.href='/dashboard?user_id=' + userId; 
@@ -80,50 +77,25 @@ $(document).ready(function() {
   // A function for handling what happens when the form to create a new meds is submitted
   function handleFormSubmit(event) {
     event.preventDefault();
-    //console.log(strengths);
-    //console.log(validateDose(doseInput));
-    // Wont submit the meds if we are missing specific form inputs
-    if (!nameInput.val().trim() || 
-        !doseInput.val().trim() || 
-        !frequencyInput.val().trim() || 
-        !timesInput.val().trim() ||
-        !startInput.val().trim() || 
-        //!instructionsInput.val().trim() || 
-        !countInput.val().trim() //||
-        //!userSelect.val()
-        ) 
-        {
-      return;
-    }
+    
+    resetFormValidation();
+    var formValidationResult = validateForm();
 
-    var isValidMed = validateMed(nameInput);
-   
-    function validateMed(medInput){
-      return medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) != null;
-    };
+    if(!formValidationResult.isFormValid){
+      showValidationErrors(formValidationResult);
+    }else{
+      submitForm();
+    }   
+  }
 
-    function validateDose(doseInput){
-      return strengths.indexOf(doseInput.val()) > -1; 
-    };  
-
-    function validateDoseTimes(timesInput){
-      return Number.isInteger(timesInput);
-    };
-
-    function validatMedCount(countInput){
-      return Number.isInteger(countInput);
-    };
+  function submitForm(){
 
     // Constructing a newmeds object to hand to the database
     var startNew = new Date(startInput.val().trim());
     var startDate = startNew.getFullYear() + '-' + (startNew.getMonth()+1) + '-' + startNew.getDate();
-    
-
     var startDateTime = startDate + " 03:00:00";
-    console.log(startDateTime);
-    
     var hourInterval;
-    
+
     if(frequencyInput.val().trim().toUpperCase() == 'DAILY'){
       hourInterval = (24/timesInput.val().trim());
     }
@@ -133,19 +105,11 @@ $(document).ready(function() {
     if(frequencyInput.val().trim().toUpperCase()  == 'MONTHLY'){
       hourInterval = (720/timesInput.val().trim());
     }
-
+    
     var newHrInterval = hrTohhmmss(hourInterval);
-    console.log(newHrInterval);
-
     var mStart = moment(startDateTime,"YYYY-MM-DD HH:mm:ss");
-    console.log(mStart._d);
-    
     var nextDateTime = moment(mStart._d).add(hourInterval, 'hours');
-    console.log(nextDateTime._d);
-    
-
     var eventArray = [];
-    console.log("countInput: " + countInput.val().trim());
 
     for (var i = 0; i < countInput.val().trim(); i++){
       var med_count_number = (i+1);
@@ -154,48 +118,25 @@ $(document).ready(function() {
       var eventItem = {med_count_number, event_time, MedId};
       eventArray.push(eventItem);
     }
-    console.log(eventArray);
-
 
     var newMed = {
       id: "",
       innerMed: {
-      med_name: nameInput
-        .val()
-        .trim(),
-      med_dose: doseInput
-        .val()
-        .trim(),
-      freq_main: frequencyInput
-        .val()
-        .trim(),
-      freq_times: timesInput
-        .val()
-        .trim(),
+      med_name: nameInput.val().trim(),
+      med_dose: doseInput.val().trim(),
+      freq_main: frequencyInput.val().trim(),
+      freq_times: timesInput.val().trim(),
       hr_interval: newHrInterval,
-      start_date: startInput
-        .val()
-        .trim(),
+      start_date: startInput.val().trim(),
       first_med: mStart._d,
       next_med: nextDateTime._d,
-      instructions: instructionsInput
-        .val()
-        .trim(),
-      initial_count: countInput
-        .val()
-        .trim(),
-      remaining_count: countInput
-        .val()
-        .trim(),
-      //UserId: userSelect.val()
+      instructions: instructionsInput.val().trim(),
+      initial_count: countInput.val().trim(),
+      remaining_count: countInput.val().trim(),
       UserId: userId
     },
       events: eventArray
     };
-
-    
-
-    console.log(newMed);
 
     // If we're updating a meds run updatemeds to update a meds
     // Otherwise run submitmeds to create a whole new meds
@@ -204,11 +145,9 @@ $(document).ready(function() {
       updateMeds(newMed);
     }
     else {
-      console.log("test");
       submitMeds(newMed);
     }
   }
-
 
   function hrTohhmmss(hrs){
      var sign = hrs < 0 ? "-" : "";
@@ -240,20 +179,15 @@ $(document).ready(function() {
     }
     $.get(queryUrl, function(data) {
       if (data) {
-        console.log(data.UserId || data.id);
-        console.log("START DATE " + data.start_date);
-
         var startNew = new Date(data.start_date);
-        console.log("START DATE New " + startNew);
         var startDate =  ("0" + (startNew.getMonth()+1)).slice(-2) + '/' + ("0" + startNew.getDate()).slice(-2) + '/' + startNew.getFullYear();
-        console.log("START DATE New Full: " + startDate);
         // If this meds exists, prefill our med-manager forms with its data
         nameInput.val(data.med_name);  
         doseInput.val(data.med_dose);  
         frequencyInput.val(data.freq_main); 
         timesInput.val(data.freq_times);
 
-         //establish min date for datepicker
+        //establish min date for datepicker
         var minDate = new Date(startDate);
         var currentMonth = minDate.getMonth()+1;
         currentMonth = currentMonth > 9 ? currentMonth : ("0" + currentMonth);  
@@ -309,16 +243,152 @@ $(document).ready(function() {
 
   // Update a given meds, bring user to the blog page when done
   function updateMeds(meds) {
-    console.log("update meds: " + JSON.stringify(meds));
     $.ajax({
       method: "PUT",
       url: "/api/meds",
       data: meds
     })
     .done(function() {
-      console.log("DONE")
       window.location.href = "/med-list?user_id=" + userId;
     });
   }
 
+// Validation 
+
+  // validator is comprised of functions dedicated to validating form inputs
+  var validator = {
+
+    validateMed: function(medInput){
+      var validationResult = { isValid: true, message:""};
+      if(!medInput.val().trim()){
+        validationResult.isValid = false;
+        validationResult.message = "You must enter a med.";
+      }
+      if(validationResult.isValid && medInput[0].autocomp.getItemCode(medInput[0].autocomp.getSelectedItems()[0]) == null){
+        validationResult.isValid = false;
+        validationResult.message = "You must enter a valid med.";        
+      }
+      return validationResult;
+    },
+
+    validateDose:function(doseInput){
+      var validationResult = { isValid: true, message:""};
+      if(!doseInput.val().trim()){
+        validationResult.isValid = false;
+        validationResult.message = "You must enter a dosage.";
+      }
+      return validationResult;
+    },
+
+    validateFrequency:function(frequencyInput){
+      var validationResult = { isValid: true, message:""};
+
+      return validationResult;
+    },
+
+    validateTimes:function(timesInput){
+      var validationResult = { isValid: true, message:""};
+
+      return validationResult;
+    },
+
+    validateStart:function(startInput){
+      var validationResult = { isValid: true, message:""};
+
+      return validationResult;
+    },
+
+    validateCount:function(countInput){
+      var validationResult = { isValid: true, message:""};
+
+
+      return validationResult;
+    }
+
+  }
+
+  function validateForm(){
+    var validationFormResult = {};
+    validationFormResult.medInputResult = validator.validateMed(nameInput);
+    validationFormResult.doseInputResult = validator.validateDose(doseInput);
+    validationFormResult.frequencyInputResult = validator.validateFrequency(frequencyInput);
+    validationFormResult.timesInputResult = validator.validateTimes(timesInput);
+    validationFormResult.startInputResult = validator.validateStart(startInput);
+    validationFormResult.countInputResult = validator.validateCount(countInput);
+    validationFormResult.isFormValid = isFormValid(validationFormResult);
+    return validationFormResult;
+  }
+
+  function isFormValid(validationFormResult){
+    var formIsValid = 
+      (validationFormResult.medInputResult.isValid 
+        && validationFormResult.doseInputResult.isValid
+        && validationFormResult.frequencyInputResult.isValid 
+        && validationFormResult.timesInputResult.isValid 
+        && validationFormResult.startInputResult.isValid 
+        && validationFormResult.countInputResult.isValid);
+    return formIsValid;
+  }
+
+  function oldValidateForm(){
+    if ( 
+        !frequencyInput.val().trim() || 
+        !timesInput.val().trim() ||
+        !startInput.val().trim() || 
+        //!instructionsInput.val().trim() || 
+        !countInput.val().trim()
+        /*|| !userSelect.val()*/){
+      return false;
+    }    
+
+    function validateDose(doseInput){
+      return strengths.indexOf(doseInput.val()) > -1; 
+    };  
+
+    function validateDoseTimes(timesInput){
+      return Number.isInteger(timesInput);
+    };
+
+    function validatMedCount(countInput){
+      return Number.isInteger(countInput);
+    };
+  }
+
+  // clears out all the error messages currently visibile on the form
+  function resetFormValidation(){
+    $("#nameInputValidation").hide();
+    $("#doseInputValidation").hide();
+    $("#frequencyInputValidation").hide();
+    $("#timesInputValidation").hide();
+    $("#startInputValidation").hide();
+    $("#countInputValidation").hide();
+  }
+
+  // will update the validation messages and show the correct ones
+  function showValidationErrors(validationFormResult){
+    if(!validationFormResult.medInputResult.isValid){
+      $("#nameInputValidation").text(validationFormResult.medInputResult.message); 
+      $("#nameInputValidation").show();     
+    }
+    if(!validationFormResult.doseInputResult.isValid){
+      $("#doseInputValidation").text(validationFormResult.doseInputResult.message);  
+      $("#doseInputValidation").show();       
+    }
+    if(!validationFormResult.frequencyInputResult.isValid){
+      $("#frequencyInputValidation").text(validationFormResult.frequencyInputResult.message);    
+      $("#frequencyInputValidation").show();
+    }
+    if(!validationFormResult.timesInputResult.isValid){
+      $("#timesInputValidation").text(validationFormResult.timesInputResult.message);
+      $("#timesInputValidation").show();   
+    }
+    if(! validationFormResult.startInputResult.isValid){
+      $("#startInputValidation").text(validationFormResult.startInputResult.message);
+      $("#startInputValidation").show();   
+    }
+    if(!validationFormResult.countInputResult.isValid){
+      $("#countInputValidation").text(validationFormResult.countInputResult.message);
+      $("#countInputValidation").show();
+    }
+  }
 });
