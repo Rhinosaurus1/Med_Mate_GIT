@@ -11,7 +11,7 @@
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
     
     
 
@@ -60,9 +60,11 @@
 					<div class="form-group">
 						<label for="name">Name:</label>
 						<input placeholder="Name of Medication" type="text" class="form-control" id="name">
+						<span id="nameInputValidation" style="display:none;" class="validation-span"></span>
 						<br />
 						<label for="dose">Dose:</label>
 						<input placeholder="Dosage" type="text" class="form-control" id="dose">
+						<span id="doseInputValidation" style="display:none;" class="validation-span"></span>
 						<br />
 						<label for="frequency">Select Frequency: </label>
 						<br />
@@ -71,18 +73,22 @@
 							<option value="weekly">Weekly</option>
 							<option value="monthly">Monthly</option>
 						</select>
+						<span id="frequencyInput" style="display:none;" class="validation-span"></span>
 						<br />
 						<label for="times">Times: (Integer) </label>
 						<input placeholder="Times" type="text" class="form-control" id="times">
+						<span id="timesInputValidation" style="display:none;" class="validation-span"></span>
 						<br />
 						<label for="start">Start Date:</label>
 						<input placeholder="Choose a date" type="date" class="form-control" id="start">
+						<span id="startInputValidation" style="display:none;" class="validation-span"></span>
 						<br />
 						<label for="instructions">Instructions:</label>
 						<input placeholder="Instructions" type="text" class="form-control" id="instructions">
 						<br />
-				        <label for="count">Count:</label>
+						<label for="count">Count:</label>
 						<input placeholder="Count" type="text" class="form-control" id="count">
+						<span id="countInputValidation" style="display:none;" class="validation-span"></span>
 						<br />
 						<!--
 						<div class="form-group">
