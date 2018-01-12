@@ -1,0 +1,37 @@
+#jumboHead{
+    height: 5px;
+    background-image: url("/images/pills2.jpg");
+    background-size: 1924px 1263px;
+    background-position-x: 0%;
+    background-position-y: 93%;
+    margin: 0px;
+}
+
+#headMain{
+    font-family: 'Inknut Antiqua', serif;
+    color: #FFF;
+    font-size: 530%;
+    margin:auto;
+    padding: 0px;
+    margin-top: -65px;
+
+}
+
+#logoHead{
+    height: 75px;
+    width: 60px;
+    margin-bottom: 33px;
+}
+
+#navbar{
+    padding-left:10px;
+    background-color: black;
+}
+
+#newMedBtn, #medListBtn, #dashBtn, #logout{
+    color: #FFF;
+}
+
+.active{
+    color: grey !important;
+}

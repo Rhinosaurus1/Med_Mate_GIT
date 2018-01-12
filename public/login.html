@@ -16,15 +16,8 @@
 
 <body>
 	<div class="container">
-		<br>
 		<div class="row">
-	      <div class="col-md-2 col-sm-2">
-	        <a class="btn btn-danger" href="/">Return Home</a>
-	      </div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-12 col-md-offset-2">
+			<div class="col-md-12">
 					<h1 id="heading"><img id="logoHome" src="images/redcheck.png" alt="" height="200" width="150"/>MedMate</h1> 
 				<div class="user-container">
 					<h1>User Login</h1>
@@ -43,6 +36,26 @@
 						</form>
 				</div>
 			</div>
+		</div>
+		<!-- The Modal -->
+		<div id="invalidModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        
+		        <h4 class="modal-title">Oh, no!</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>That username or password is invalid...</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal" id="invalidBtn">Try Again</button>
+		      </div>
+		    </div>
+
+		  </div>
 		</div>
 	</div>
 	<!-- Custom Script-->
