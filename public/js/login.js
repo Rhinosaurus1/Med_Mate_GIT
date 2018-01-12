@@ -31,6 +31,7 @@ $(document).ready(function() {
       loginInput = ("");
       passwordInput = ("");
     verifyUser(userData);
+    //$("#loginModal").modal("toggle");
   }
 
   // A function for verifying a user.
@@ -41,15 +42,18 @@ $(document).ready(function() {
     $.post('/login', userData, function(response){
           console.log(response);
           if(response == "invalid username"){
-              alert("That is an invalid username");
-              window.location.href = "/login";
+              //alert("That is an invalid username");
+              $("#invalidModal").modal("toggle")
+              //window.location.href = "/login";
           }
           if(response == "invalid password"){
-              alert("That is an invalid password");
-              window.location.href = "/login";
+              //alert("That is an invalid password");
+              $("#invalidModal").modal("toggle");
+              //window.location.href = "/login";
           }
           if(response.status == "success"){
-              alert("Welcome!");
+              //alert("Welcome!");
+              //$("#loginModal").modal("toggle")
               console.log("USER DATA" + JSON.stringify(userData));
               console.log("RESPONSE: " + response.status);
               console.log("RESPONSE: " + response.userid);
@@ -57,6 +61,15 @@ $(document).ready(function() {
           }
     });
   }
+
+//Code for the Invalid login modal
+  function invalidModal(){
+    window.location.href = "/login";
+  };
+
+  $(document).on("click", "#invalidBtn", invalidModal);
+
+
   
   /*
   function verifyUser(userData) {
