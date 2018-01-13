@@ -94,3 +94,7 @@ button {
     margin-bottom: 25px;
     margin-top: 15px;
 }
+.validation-span{
+    color: red;
+    margin: 20px;
+}
