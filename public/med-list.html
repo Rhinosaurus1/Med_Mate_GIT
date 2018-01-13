@@ -8,11 +8,11 @@
   <link rel="shortcut icon" href="images/redcheck.png">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
   <link rel="stylesheet" href="css/med-list.css" media="screen" title="no title">
-<link href="https://fonts.googleapis.com/css?family=Inknut+Antiqua:600|Raleway:500" rel="stylesheet">
-<script src="https://code.jquery.com/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Inknut+Antiqua:600|Raleway:500" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 </head>
 
@@ -50,7 +50,9 @@
     <div class="container-fluid main-content">
       <div class="row">
         <div class="col-lg-1 side-panel" id="sideLeft"></div>
-          <div class="col-lg-10 main-panel meds-container">
+          <div class="col-lg-10 main-panel">
+            <h1 id="pageTitle">My Med List</h1>
+            <div class="meds-container"></div>
           </div>
         <div class="col-lg-1 side-panel" id="sideRight"></div>
       </div>
@@ -60,9 +62,9 @@
       <div class="modal fade" id="picModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            <div class="modal-header">              
               <h5 class="modal-title" id="modalLabel">Medication Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
                 </div>
                 <div class="modal-body">
 
@@ -95,8 +97,8 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
               <h5 class="modal-title" id="modalLabel">Dose Tracker For:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
                 </div>
             <div class="modal-body" id="chartBody">
             </div>

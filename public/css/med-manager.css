@@ -53,13 +53,6 @@ nav {
     height:100vmax !important;
 }
 
-#sideLeft {
-    /*border-right: 3px solid #BF901D !important;*/
-}
-
-#sideRight {
-    /*border-left: 3px solid #BF901D !important;*/
-}
 
 .main-content{
     font-family: 'Raleway', sans-serif;
@@ -93,4 +86,8 @@ button {
     color:rgba(0, 0, 0, 0.707);
     margin-bottom: 25px;
     margin-top: 15px;
+}
+.validation-span{
+    color: red;
+    margin: 20px;
 }
