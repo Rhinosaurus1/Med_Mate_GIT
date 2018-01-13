@@ -15,7 +15,7 @@ var schedule = require("node-schedule");
 // =============================================================
 module.exports = function(app) {
 
-  var j = schedule.scheduleJob('*/1 * * * *', function(){
+  var j = schedule.scheduleJob('*/2 * * * *', function(){
     getAllEvents();
   });
 
@@ -144,14 +144,14 @@ module.exports = function(app) {
 	            host: 'smtp.gmail.com',
 	            port: 587,
 	            auth: {
-	                user: 'billstopay109@gmail.com',
-	                pass: 'blake150'
+	                user: 'med.mate.medreminders@gmail.com',
+	                pass: 'passwurd'
 	            }
 	          });
 
 	          //set up email to send, to , from, subject, text
 	          var mailOptions = {
-	            from: 'billstopay109@gmail.com',
+	            from: 'med.mate.medreminders@gmail.com',
 	            to: email,
 	            subject: "Medications to take today",
 	            text: "Medications to take today",
@@ -196,11 +196,12 @@ module.exports = function(app) {
 
 
   //email route for testing
-  /*
   app.get("/api/events/send/:email", function(req,res){
     //set email address as entered email
-    var emailAddress = req.params.email;
-    console.log("emailAddress: " + emailAddress);
+    var parts = (req.params.email).split("$",2);
+    var emailAddress = parts[0];
+    var userId = parts[1];
+    console.log("emailAddress and UserId: " + emailAddress + " " + userId);
     var query = {
       event_time: {
         [Op.between]: [newDate, nextnewDate]
@@ -211,6 +212,9 @@ module.exports = function(app) {
       include: [
         {
           model: db.Meds,
+          where: {
+          	UserId: userId
+          },
           include: [
             {
               model: db.User
@@ -224,6 +228,7 @@ module.exports = function(app) {
         eventsDB: dbEvents
       };
 
+      console.log("DB EVENTS: " + JSON.stringify(dbEvents));
       if (typeof eventsObj.eventsDB == 'undefined' || eventsObj.eventsDB.length == 0){
         return;
       }
@@ -242,18 +247,24 @@ module.exports = function(app) {
 
       //loop through events due and html-ify for email, adding to total text
       for(var i=0; i<eventsObj.eventsDB.length; i++){
+	    var yesno = "YES";
+    	console.log("Taken STATUS: " + eventsObj.eventsDB[i].taken_status);
+		if(eventsObj.eventsDB[i].taken_status === false ) {
+		    yesno = "NO";
+		}
       	var dateTime = getFormattedDateTime(eventsObj.eventsDB[i].event_time);
-        var eventItem = ("<p>Name:   <b>" + eventsObj.eventsDB[i].Med.med_name + "</b>   Take Time:   <b>" + dateTime +  "</b>   Taken Already?:   <b>"  +  eventsObj.eventsDB[i].taken_status + "</b></p>");
+        var eventItem = ("<p>Name:   <b>" + eventsObj.eventsDB[i].Med.med_name + "</b>   Take Time:   <b>" + dateTime +  "</b>   Taken Already?:   <b>"  + yesno + "</b></p>");
         eventsText = eventsText + eventItem;
       };
 
+      var name = eventsObj.eventsDB[0].Med.User.name;
       //set up email to send, to , from, subject, text
       var mailOptions = {
         from: 'med.mate.medreminders@gmail.com',
         to: emailAddress,
         subject: "Medications to take today",
         text: "Medications to take today",
-        html: "<p><b>THE FOLLOWING MEDICATIONS ARE TO BE TAKEN TODAY </b></p>"  + eventsText
+        html: "<p><b>HELLO " + name + "! THE FOLLOWING MEDICATIONS ARE TO BE TAKEN TODAY </b></p>"  + eventsText
       };
 
       //send email, log error if any, return "sent" if no error
@@ -265,7 +276,7 @@ module.exports = function(app) {
       res.send("sent");
     });
   });
-  */
+  
 
   function getFormattedDateTime(data){
     var tempDate = data;
