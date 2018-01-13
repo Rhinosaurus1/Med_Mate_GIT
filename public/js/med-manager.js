@@ -233,26 +233,7 @@ $(document).ready(function() {
       window.location.href = "/users";
     }
     $(".hidden").removeClass("hidden");
-    //var rowsToAdd = [];
-    //for (var i = 0; i < data.length; i++) {
-      //rowsToAdd.push(createUserRow(data[i]));
-    //}
-    //userSelect.empty();
-    //console.log(rowsToAdd);
-    //console.log(userSelect);
-    //userSelect.append(rowsToAdd);
-    //userSelect.val(userId);
   }
-
-  /*
-  // Creates the user options in the dropdown
-  function createUserRow(user) {
-    var listOption = $("<option>");
-    listOption.attr("value", user.id);
-    listOption.text(user.username);
-    return listOption;
-  }
-  */
 
   // Update a given meds, bring user to the blog page when done
   function updateMeds(meds) {

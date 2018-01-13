@@ -20,18 +20,15 @@
 
   if (url.indexOf("?user_id=") !== -1) {
     userId = url.split("=")[1];
-    console.log(userId);
     getMeds(userId);
   }
 
   function sendEmail(){
     event.preventDefault();
     var emailAddress = $("#email_input").val().trim();
-    console.log("emailAddress: " + emailAddress);
     var form = document.getElementById("emailForm");
     form.reset();
       $.get("api/events/send/" + emailAddress+"$"+userId, function(response){
-        console.log("response: " + response);
         if(response == "sent"){
           alert("Email has been sent to "+ emailAddress +" Please check inbox!");
         }
@@ -79,7 +76,6 @@
 
 
   function takeMeds(currentMed) {
-    console.log("takeMeds id: " + currentMed.id);
     $.ajax({
       method: "PUT",
       url: "/api/events/" + currentMed.id,
@@ -102,8 +98,6 @@
 
   // This function constructs a meds's HTML
   function createNewRow(meds) {
-
-    console.log(meds);
 
     var newMedsPanel = $("<div>");
     newMedsPanel.addClass("card");
@@ -161,7 +155,6 @@
       .parent()
       .parent()
       .data("meds");
-      console.log("current meds: " + JSON.stringify(currentMeds));
     takeMeds(currentMeds);
   }
 
@@ -194,7 +187,6 @@
     var medName = chosenMed.Med.med_name.trim();
     var doseRemain = chosenMed.Med.remaining_count;
     var doseInitial = chosenMed.Med.initial_count;
-    console.log("medName: " + medName);
     $("#chartModal").modal("toggle");
       var ctx = document.getElementById("myChart").getContext('2d');
       var myDoughnutChart = new Chart(ctx, {
@@ -244,33 +236,21 @@
       .parent()
       .parent()
       .data("meds");
-
-    console.log("chosenMed: " + chosenMed);
     var medNameFirst = chosenMed.Med.med_name;
-    console.log("medNameFirst: " + medNameFirst);
     if(medNameFirst.includes("/") === true){
       medNameFirst = chosenMed.Med.med_name.substr(0,chosenMed.Med.med_name.indexOf('/'));
     }
     if (medNameFirst.includes("(") === true){
       medNameFirst = chosenMed.Med.med_name.substr(0,chosenMed.Med.med_name.indexOf('('));
     }
-    console.log("medNameFirst: " + medNameFirst);
     var medName = medNameFirst.trim();
-    console.log("medName: " + medName);
     var medDose = chosenMed.Med.med_dose.trim();
-    console.log("medDose: " + medDose);
     var medDoseNum = medDose.match(/\d+/)[0].trim();
-    console.log("medDoseNum: " + medDoseNum);
     var medDoseUnitFirst = (medDose.replace("Tab",'')).trim();
-    console.log("medDoseUnitFirst:" + medDoseUnitFirst);
     var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
-    console.log("medDoseUnit: " + medDoseUnit);
     var medDoseUnit2 = (medDoseUnit.replace(/-/g,"")).trim();
-    console.log("medDoseUnit2: " + medDoseUnit2);
     var medDoseUnit3 = (medDoseUnit2.substr(0,medDoseUnit2.indexOf(' ')));
-    console.log("medDoseUnit3: " + medDoseUnit3);
     var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit3.trim();
-    console.log("medDoseNew: " + medDoseNew);
 
     var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
     //Use ajax call to obtain images asychronously
@@ -278,7 +258,6 @@
       url: queryURL,
       method: "GET"
     }).done(function(response){
-        console.log("response.nlmRxImages: " + JSON.stringify(response.nlmRxImages));
         var likelyArray = [];
         if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
           $("#noPicModal").modal("toggle");
@@ -294,21 +273,18 @@
             likelyArray.push(response.nlmRxImages[j].imageUrl);
           }
         }
-        console.log("likelyArray: " + likelyArray);
         var carouselContainer = $(".slideshow-container");
         var item = $(".inner-container");
         $("#picModal").modal("toggle");
 
         $.each(likelyArray, function( intIndex, objValue ){
-          console.log("intIndex: " + intIndex);
-          console.log("objValue: " + objValue);
           item.append($( '<span class = "dot" onclick="currentSlide(' + intIndex + ')"></span>' ));
           carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div>'));      
         });
           $('.carousel-indicators li:first').addClass('active');
           $('.carousel-inner li:first').addClass('active');
 
-            var slideIndex = 1;
+      var slideIndex = 1;
       showSlides(slideIndex);
       currentSlide(slideIndex);
 
@@ -329,10 +305,8 @@
   };
 
   function showSlides(n) {
-    console.log("slideIndex: " + n);
     var i;
     var slides = $(".mySlides");
-    console.log("slides.length: " + slides.length);
     var dots = $(".dot");
     if (n > slides.length) {slideIndex = 1}
     if (n < 1) {slideIndex = slides.length}

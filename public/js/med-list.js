@@ -18,16 +18,12 @@
   // In '?meds_id=1', medsId is 1
   var url = window.location.search;
 
-  console.log("URL: " + url);
   var userId;
 
   if (url.lastIndexOf("?user_id=") !== -1) {
     userId = url.split("=")[1];
     getMeds(userId);
   }
-
-  console.log("USER ID " + userId);
- 
 
   $(document).on("click", "#dashBtn", goToDashboard);
   $(document).on("click", "#newMedBtn", goToNewMed);
@@ -90,7 +86,6 @@
 
   // This function constructs a meds's HTML
   function createNewRow(meds) {
-    console.log("meds: " + JSON.stringify(meds));
     var newMedsPanel = $("<div>");
     newMedsPanel.addClass("card");
     var newMedsWrapper = $("<div>");
@@ -111,14 +106,14 @@
     chartBtn.addClass("chart btn btn-outline-secondary");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
-    var newMedsUser = $("<h5>");
-    newMedsUser.text("Med for: " + meds.User.username);
-    newMedsUser.css({
-      float: "right",
-      color: "blue",
-      "margin-top":
-      "-10px"
-    });
+    //var newMedsUser = $("<h5>");
+    //newMedsUser.text("Med for: " + meds.User.username);
+    //newMedsUser.css({
+      //float: "right",
+      //color: "blue",
+      //"margin-top":
+      //"-10px"
+    //});
     var newMedsPanelBody = $("<div>");
     newMedsPanelBody.addClass("card-text");
     var newMedsBody = $("<p>");
@@ -130,7 +125,7 @@
     newMedsPanelBody.append(picBtn);
     newMedsPanelBody.append(chartBtn);
     newMedsPanelHeading.append(newMedsTitle);
-    newMedsPanelHeading.append(newMedsUser);
+    //newMedsPanelHeading.append(newMedsUser);
     newMedsWrapper.append(newMedsPanelHeading);
     newMedsWrapper.append(newMedsPanelBody);
     newMedsWrapper.data("meds", meds);
@@ -182,7 +177,6 @@
     var medName = chosenMed.med_name.trim();
     var doseRemain = chosenMed.remaining_count
     var doseInitial = chosenMed.initial_count
-    console.log("medName: " + medName);
     $("#chartModal").modal("toggle");
       var ctx = document.getElementById("myChart").getContext('2d');
       var myDoughnutChart = new Chart(ctx, {
@@ -231,40 +225,27 @@
       .parent()
       .parent()
       .data("meds");
-
-    console.log("chosenMed: " + chosenMed);
     var medNameFirst = chosenMed.med_name;
-    console.log("medNameFirst: " + medNameFirst);
     if(medNameFirst.includes("/") === true){
       medNameFirst = chosenMed.med_name.substr(0,chosenMed.med_name.indexOf('/'));
     }
     if (medNameFirst.includes("(") === true){
       medNameFirst = chosenMed.med_name.substr(0,chosenMed.med_name.indexOf('('));
     }
-    console.log("medNameFirst: " + medNameFirst);
     var medName = medNameFirst.trim();
-    console.log("medName: " + medName);
     var medDose = chosenMed.med_dose.trim();
-    console.log("medDose: " + medDose);
     var medDoseNum = medDose.match(/\d+/)[0].trim();
-    console.log("medDoseNum: " + medDoseNum);
     var medDoseUnitFirst = (medDose.replace("Tab",'')).trim();
-    console.log("medDoseUnitFirst:" + medDoseUnitFirst);
     var medDoseUnit = (medDoseUnitFirst.replace(/[0-9]/g,'')).toUpperCase().trim();
-    console.log("medDoseUnit: " + medDoseUnit);
     var medDoseUnit2 = (medDoseUnit.replace(/-/g,"")).trim();
-    console.log("medDoseUnit2: " + medDoseUnit2);
     var medDoseUnit3 = (medDoseUnit2.substr(0,medDoseUnit2.indexOf(' ')));
-    console.log("medDoseUnit3: " + medDoseUnit3);
     var medDoseNew = " " + medDoseNum.trim() + " " + medDoseUnit3.trim();
-    console.log("medDoseNew: " + medDoseNew);
     var queryURL = "https://rximage.nlm.nih.gov/api/rximage/1/rxnav?&resolution=600&rLimit=50&name="+ medName;
     //Use ajax call to obtain images asychronously
     $.ajax({
       url: queryURL,
       method: "GET"
     }).done(function(response){
-        console.log("response.nlmRxImages: " + response.nlmRxImages);
         var likelyArray = [];
         if(typeof response.nlmRxImages == 'undefined' || response.nlmRxImages.length == 0){
           $("#noPicModal").modal("toggle");
@@ -280,21 +261,18 @@
             likelyArray.push(response.nlmRxImages[j].imageUrl);
           }
         }
-        console.log("likelyArray: " + likelyArray);
         var carouselContainer = $(".slideshow-container");
         var item = $(".inner-container");
         $("#picModal").modal("toggle");
 
 	      $.each(likelyArray, function( intIndex, objValue ){
-	        console.log("intIndex: " + intIndex);
-	        console.log("objValue: " + objValue);
 	        item.append($( '<span class = "dot" onclick="currentSlide(' + intIndex + ')"></span>' ));
 	        carouselContainer.append($('<div class="mySlides"><img src="' + objValue +'"style=width:100%></div>'));      
 	      });
           $('.carousel-indicators li:first').addClass('active');
           $('.carousel-inner li:first').addClass('active');
 
-          	var slideIndex = 1;
+      var slideIndex = 1;
 			showSlides(slideIndex);
 			currentSlide(slideIndex);
 
@@ -315,10 +293,8 @@
 	};
 
 	function showSlides(n) {
-	  console.log("slideIndex: " + n);
 	  var i;
 	  var slides = $(".mySlides");
-	  console.log("slides.length: " + slides.length);
 	  var dots = $(".dot");
 	  if (n > slides.length) {slideIndex = 1}
 	  if (n < 1) {slideIndex = slides.length}

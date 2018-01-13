@@ -20,8 +20,6 @@ $(document).ready(function() {
     userId = url.split("=")[1];
   }
 
-  console.log("USER ID " + userId);
-
   $(document).on("click", "#medListBtn", goToMedList);
   $(document).on("click", "#newMedBtn", goToNewMed);
   $(document).on("click", "#todayBtn", goToToday);
@@ -93,9 +91,7 @@ $(document).ready(function() {
   // Function for handling what happens when the delete button is pressed
   function handleDeleteButtonPress() {
     var listItemData = $(this).parent("td").parent("tr").data("user");
-    console.log("listItemData: " + listItemData);
     var id = listItemData.id;
-    console.log("listItemData.id: " + id);
     $("#deleteAccount").modal("toggle");
     $("#delete").on("click", function(){
 	      $.ajax({
