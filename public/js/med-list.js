@@ -86,21 +86,23 @@
   function createNewRow(meds) {
     console.log("meds: " + JSON.stringify(meds));
     var newMedsPanel = $("<div>");
-    newMedsPanel.addClass("panel panel-default");
+    newMedsPanel.addClass("card");
+    var newMedsWrapper = $("<div>");
+    newMedsWrapper.addClass("card-body");
     var newMedsPanelHeading = $("<div>");
-    newMedsPanelHeading.addClass("panel-heading");
+    newMedsPanelHeading.addClass("card-title");
     var deleteBtn = $("<button>");
     deleteBtn.text("x");
     deleteBtn.addClass("delete btn btn-danger");
     var editBtn = $("<button>");
     editBtn.text("EDIT");
-    editBtn.addClass("edit btn btn-info");
+    editBtn.addClass("edit btn btn-outline-secondary");
     var picBtn = $("<button>");
     picBtn.text("View Picture(s)");
-    picBtn.addClass("pic btn btn-success");
+    picBtn.addClass("pic btn btn-outline-secondary");
     var chartBtn = $("<button>");
     chartBtn.text("View Chart");
-    chartBtn.addClass("chart btn btn-primary");
+    chartBtn.addClass("chart btn btn-outline-secondary");
     var newMedsTitle = $("<h2>");
     var newMedsDate = $("<small>");
     var newMedsUser = $("<h5>");
@@ -112,20 +114,21 @@
       "-10px"
     });
     var newMedsPanelBody = $("<div>");
-    newMedsPanelBody.addClass("panel-body");
+    newMedsPanelBody.addClass("card-text");
     var newMedsBody = $("<p>");
     newMedsTitle.text(meds.med_name + "  -  " + meds.med_dose);
     newMedsBody.text(meds.instructions + " - " + meds.freq_times + " times  -  " + meds.freq_main);
-    newMedsPanelHeading.append(deleteBtn);
-    newMedsPanelHeading.append(editBtn);
-    newMedsPanelHeading.append(picBtn);
-    newMedsPanelHeading.append(chartBtn);
+    newMedsPanelBody.append(newMedsBody);
+    newMedsPanelBody.append(deleteBtn);
+    newMedsPanelBody.append(editBtn);
+    newMedsPanelBody.append(picBtn);
+    newMedsPanelBody.append(chartBtn);
     newMedsPanelHeading.append(newMedsTitle);
     newMedsPanelHeading.append(newMedsUser);
-    newMedsPanelBody.append(newMedsBody);
-    newMedsPanel.append(newMedsPanelHeading);
-    newMedsPanel.append(newMedsPanelBody);
-    newMedsPanel.data("meds", meds);
+    newMedsWrapper.append(newMedsPanelHeading);
+    newMedsWrapper.append(newMedsPanelBody);
+    newMedsWrapper.data("meds", meds);
+    newMedsPanel.append(newMedsWrapper);
     return newMedsPanel;
   }
 
