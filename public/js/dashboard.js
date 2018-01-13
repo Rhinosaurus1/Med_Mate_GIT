@@ -25,7 +25,13 @@ $(document).ready(function() {
   $(document).on("click", "#medListBtn", goToMedList);
   $(document).on("click", "#newMedBtn", goToNewMed);
   $(document).on("click", "#todayBtn", goToToday);
+  $(document).on("click", "#pharmBtn", goToPharm);
 
+  function goToPharm(){
+    var location = $("#location").val().trim();
+    $("#location").val("");
+    window.open("https://www.google.com/maps/search/?api=1&query=pharmacy+" + location);
+  }
 
   function goToMedList(){
     window.location.href='/med-list?user_id=' + userId; 

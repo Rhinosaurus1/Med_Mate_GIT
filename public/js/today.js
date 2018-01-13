@@ -41,7 +41,13 @@
   $(document).on("click", "#dashBtn", goToDashboard);
   $(document).on("click", "#newMedBtn", goToNewMed);
   $(document).on("click", "#medListBtn", goToMedList);
+  $(document).on("click", "#pharmBtn", goToPharm);
 
+  function goToPharm(){
+    var location = $("#location").val().trim();
+    $("#location").val("");
+    window.open("https://www.google.com/maps/search/?api=1&query=pharmacy+" + location);
+  }
 
   function goToDashboard(){
     window.location.href='/dashboard?user_id=' + userId; 

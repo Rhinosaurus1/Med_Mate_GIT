@@ -81,3 +81,7 @@ button {
     margin-bottom: 25px;
     margin-top: 15px;
 }
+
+#pharmSearch{
+    margin-bottom: 0px !important;
+}
