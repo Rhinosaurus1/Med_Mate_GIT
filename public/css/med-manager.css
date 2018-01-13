@@ -50,7 +50,7 @@ nav {
 
 .side-panel{
     background-color: rgba(19, 91, 163, 0.9);
-    height: 100vh !important;
+    height:100vmax !important;
 }
 
 #sideLeft {
@@ -84,4 +84,13 @@ button {
 	padding: 50px;
 	margin-right: auto;
 	margin-left: auto;
+}
+
+#pageTitle{
+    text-align: center;
+    font-size: 40px;
+    font-weight: bolder;
+    color:rgba(0, 0, 0, 0.707);
+    margin-bottom: 25px;
+    margin-top: 15px;
 }

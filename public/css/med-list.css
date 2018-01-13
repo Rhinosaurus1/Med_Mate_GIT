@@ -31,7 +31,7 @@ nav {
 }
 
 
-#newMedBtn, #medListBtn, #todayBtn, #logout{
+#newMedBtn, #medListBtn, #dashBtn, #logout{
     color: #FFF;
 }
 
@@ -50,12 +50,16 @@ nav {
 
 .side-panel{
     background-color: rgba(19, 91, 163, 0.9);
-    height: 100vh !important;
+    height: 150vmax !important;
 }
+
 
 
 .main-content{
     font-family: 'Raleway', sans-serif;
+}
+.meds-container {
+    padding: 15px;
 }
 
 .main-panel{
@@ -72,12 +76,48 @@ nav {
 button {
     margin-right: 16px; 
 }
-
-#pageTitle{
+#todays{
     text-align: center;
-    font-size: 60px;
     font-weight: bolder;
+    padding-bottom: 25px;
+    font-size: 60px;
+    margin-top: -100px;
     color:rgba(0, 0, 0, 0.707);
-    margin-bottom: 25px;
-    margin-top: 15px;
+}
+#emailForm{
+    width:22%;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+#emailbtn {
+    margin: 5px;
+}
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin: -30px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev {
+  left: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
 }
