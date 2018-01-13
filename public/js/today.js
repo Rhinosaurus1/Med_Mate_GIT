@@ -10,21 +10,6 @@
   $(document).on("click", "button.chart", obtainMedChart);
   $(document).on("click", "#emailBtn", sendEmail);
 
-
-  function sendEmail(){
-    event.preventDefault();
-    var emailAddress = $("#email_input").val().trim();
-    console.log("emailAddress: " + emailAddress);
-    var form = document.getElementById("emailForm");
-    form.reset();
-      $.get("api/events/send/" + emailAddress, function(response){
-        console.log("response: " + response);
-        if(response == "sent"){
-          alert("Email has been sent to "+ emailAddress +" Please check inbox!");
-        }
-    });
-  }
-
   // Variable to hold our meds
   var meds;
   //The code below handles the case where we want to get meds meds for a specific user
@@ -37,6 +22,20 @@
     userId = url.split("=")[1];
     console.log(userId);
     getMeds(userId);
+  }
+
+  function sendEmail(){
+    event.preventDefault();
+    var emailAddress = $("#email_input").val().trim();
+    console.log("emailAddress: " + emailAddress);
+    var form = document.getElementById("emailForm");
+    form.reset();
+      $.get("api/events/send/" + emailAddress+"$"+userId, function(response){
+        console.log("response: " + response);
+        if(response == "sent"){
+          alert("Email has been sent to "+ emailAddress +" Please check inbox!");
+        }
+    });
   }
 
   $(document).on("click", "#dashBtn", goToDashboard);
