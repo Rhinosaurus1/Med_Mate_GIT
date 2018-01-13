@@ -31,11 +31,8 @@ nav {
 }
 
 
-<<<<<<< HEAD
-#newMedBtn, #medListBtn, #dashBtn, #logout{
-=======
+
 #newMedBtn, #dashBtn, #todayBtn, #logout{
->>>>>>> 22509400c8fd3413cfea6818aa7d651f67641905
     color: #FFF;
 }
 
@@ -54,13 +51,7 @@ nav {
 
 .side-panel{
     background-color: rgba(19, 91, 163, 0.9);
-<<<<<<< HEAD
     height: 150vmax !important;
-}
-
-
-=======
-    height: 100vh !important;
 }
 
 #sideLeft {
@@ -70,17 +61,10 @@ nav {
 #sideRight {
     /*border-left: 3px solid #BF901D !important;*/
 }
->>>>>>> 22509400c8fd3413cfea6818aa7d651f67641905
 
 .main-content{
     font-family: 'Raleway', sans-serif;
 }
-<<<<<<< HEAD
-.meds-container {
-    padding: 15px;
-}
-=======
->>>>>>> 22509400c8fd3413cfea6818aa7d651f67641905
 
 .main-panel{
     background-color:rgba(255, 255, 249, 0.426);
@@ -96,27 +80,6 @@ nav {
 button {
     margin-right: 16px; 
 }
-<<<<<<< HEAD
-#todays{
-    text-align: center;
-    font-weight: bolder;
-    padding-bottom: 25px;
-    font-size: 60px;
-    margin-top: -100px;
-    color:rgba(0, 0, 0, 0.707);
-}
-#emailForm{
-    width:22%;
-    display: inline-block;
-    margin-top: 10px;
-}
-
-#emailbtn {
-    margin: 5px;
-}
-=======
->>>>>>> 22509400c8fd3413cfea6818aa7d651f67641905
-
 .prev, .next {
   cursor: pointer;
   position: absolute;
@@ -143,8 +106,5 @@ button {
 
 .prev:hover, .next:hover {
   background-color: rgba(0,0,0,0.8);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 22509400c8fd3413cfea6818aa7d651f67641905
+
